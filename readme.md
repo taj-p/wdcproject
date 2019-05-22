@@ -1,4 +1,4 @@
-# UG05
+# WDC Project
 
 ## 1. 
 Ensure you have git installed on your computer. Intstall github off of the website. This will also download a GUI which can be used instead of terminal commands. (Note: Its not that good)
