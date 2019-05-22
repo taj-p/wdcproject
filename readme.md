@@ -6,7 +6,7 @@ Ensure you have git installed on your computer. Intstall github off of the websi
 ## 2.
 You only need to clone the github repository once onto your computer. Every time after that to update your git to the latest version use the command:
 ```
-git clone https://github.cs.adelaide.edu.au/SEP2018/UG05.git
+git clone https://github.com/fresto32/wdcproject.git
 //Clones the URL
 ```
 or 
