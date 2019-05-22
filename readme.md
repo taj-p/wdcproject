@@ -20,7 +20,7 @@ If you are working on a certain section of the code and there is a branch you wa
 git pull
 //To get the latest versions
 
-git checkout [-b] Enter_branch_Name [add -b to create new branch]
+git checkout [-b] Enter_branch_Name [add -b to create new branch, otherwise omit this]
 //Changes your branch to the branch name
 ```
 This will update the git to be working in your branch.
