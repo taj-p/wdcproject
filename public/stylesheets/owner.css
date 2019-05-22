@@ -1,0 +1,19 @@
+.text-small {
+	font-size: small;
+}
+
+.align-bottom {
+	vertical-align: bottom;
+}
+
+.box {
+  display: flex;
+	flex-flow: row wrap;
+  justify-content: : space-around;
+  align-content: flex-start;
+}
+
+.vertical-button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

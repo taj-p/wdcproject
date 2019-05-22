@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Restaurant website homepage">
+<meta name="author" content="Yuxiao Liu">
+<title>Restaurant4u Homepage</title>
+<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+<link rel="stylesheet" href="stylesheets/search.css">
+<link rel="stylesheet" href="stylesheets/navigationBar.css">
+<link rel="stylesheet" href="stylesheets/homepage.css">
+
+<!-- jquery CDN -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
+
+<!-- date and time picker -->
+<link href='stylesheets/rome.min.css' rel='stylesheet'>
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"></script>
+
+<!-- URI handler -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.15.2/URI.min.js"></script>
+
+<!-- Vue CDN -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.2.0/vue-resource.js"></script>
+
+<!-- Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+ 
+<body>
+
+<!-- the navbar -->
+<nav class="navbar navbar-expand-sm navbar-dark">
+  <div class="container"> <!-- to keep nav items from hugging borders in large viewports -->
+    <a class="navbar-brand" href="/">LOGO</a>
+    <div class="nav ml-auto"> <!-- to ensure sign up and sign in links are right aligned -->
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleItems" aria-controls="navbarToggleItems" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarToggleItems">
+      <a class="nav-item nav-link" id="signUp" href="#" data-toggle="modal" data-target="#signUpModal">Sign up</a>
+      <a class="nav-item nav-link" id="signIn" href="#" data-toggle="modal" data-target="#signInModal">Sign in</a>
+	    <a class="nav-item nav-link active" id="manageBooking" href="#" onclick="$('#bookingModal').modal('show');">Manage Bookings</a>
+      <div class="dropdown"><a class="nav-link dropdown-toggle" id="account" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Account
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bookingHistory">Booking History</a>
+        <a class="dropdown-item" href="owner.html">Manage Restaurant</a>
+        <a class="dropdown-item" data-toggle="modal" href="#settingsModal">Settings</a>
+        <a class="dropdown-item" href="#">Log out</a>
+      </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- breadcrumbs -->
+<div class="container-fluid breadcrumbs">
+  <div class="container">
+    <p> <a href="index.html">Home</a> </p>
+  </div>
+</div>
+
+<!-- search bar -->
+<div id="screen">
+  <img class="buttom" alt="" src="images/backgrounds/buttom.jpg">
+  <img class="top" alt="" src="images/backgrounds/top.jpg">
+  <div class="titleR">
+    <b>Discover restaurants you love</b>
+  </div>
+  <div class="containers">
+    <div class="date-containers">
+      <!-- date picker --> 
+      <input id='datePicker' class='input topRowElement'>
+      <!-- time picker -->
+      <input id='timePicker' class='input topRowElement'>
+      <!-- number of people selector --> 
+        <select id='peopleSelector' class='input topRowElement' name="peopleSelector">
+          <option value="1">1 people</option>
+          <option value="2">2 people</option>
+          <option value="3">3 people</option>
+          <option value="4">4 people</option>
+          <option value="5">5 people</option>
+          <option value="6">6 people</option>
+          <option value="7">7 people</option>
+          <option value="8">8 people</option>
+          <option value="9">9 people</option>
+          <option value="10">10 people</option>
+          <option value="11">11 people</option>
+          <option value="12">12 people</option>
+          <option value="13">13 people</option>
+          <option value="14">14 people</option>
+          <option value="15">15 people</option>
+          <option value="16">16 people</option>
+          <option value="17">17 people</option>
+          <option value="18">18 people</option>
+          <option value="19">19 people</option>
+          <option value="20">20+ people</option>
+        </select>
+    </div>
+
+    <div class="location-container">
+      <!-- search query --> 
+      <input id='searchQuery' type='text' value placeholder='Adelaide' class='input middleRowElement'>
+    </div>
+  </div>
+
+  <div class="search-container">
+    <!-- Find a table button --> 
+    <button type="button" id='findTableButton' class="btn btn-primary" onclick="findTable()">SEARCH</button>
+  </div>
+
+</div>
+
+
+
+<div class="featuredTitle">
+  <b class="titleF">Featured Restaurant</b>
+</div>
+
+
+<!-- Links that reposition the slider -->
+<div class="specialTitle">
+  <b>Today's SPECIAL</b>
+  <p></p>
+  <div class="cuisine">
+    <a href="#slide-1">Australian</a>
+    <a href="#slide-2">Italian</a>
+    <a href="#slide-3">Japanese</a>
+    <a href="#slide-4">Chinese</a>
+  </div>
+</div>
+
+
+<div id="mainVue">
+  <div class="slider">
+    <div class="slides">
+        <div id="slide-1">
+          <div class="featured" v-for="restaurant in featuredRestaurant1">
+            <img v-bind:src="restaurant.img" alt="restaurant image">
+            <p class="titleM"><a v-bind:href="'/restaurantPage.html?restaurantid=' + restaurant.id"> {{  restaurant.title  }} </a></p>
+            <i class="fa fa-star-o"></i> 
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+          </div>
+      </div>
+      <div id="slide-2">
+          <div class="featured" v-for="restaurant in featuredRestaurant2">
+            <img v-bind:src="restaurant.img" alt="restaurant image">
+            <p class="titleM"><a v-bind:href="'/restaurantPage.html?restaurantid=' + restaurant.id"> {{  restaurant.title  }} </a></p>
+            <i class="fa fa-star-o"></i> 
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+          </div>
+      </div>
+      <div id="slide-3">
+          <div class="featured" v-for="restaurant in featuredRestaurant3">
+            <img v-bind:src="restaurant.img" alt="restaurant image">
+            <p class="titleM"><a v-bind:href="'/restaurantPage.html?restaurantid=' + restaurant.id"> {{  restaurant.title  }} </a></p>
+            <i class="fa fa-star-o"></i> 
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+          </div>
+      </div>
+      <div id="slide-4">
+          <div class="featured" v-for="restaurant in featuredRestaurant4">
+            <img v-bind:src="restaurant.img" alt="restaurant image">
+            <p class="titleM"><a v-bind:href="'/restaurantPage.html?restaurantid=' + restaurant.id"> {{  restaurant.title  }} </a></p>
+            <i class="fa fa-star-o"></i> 
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="copyright">
+    <p> Privacy Policy - Terms of Use - Copyright 2019 </p>
+</div>
+
+<!-- Modal to list current bookings -->
+<div id="bookingInfo">
+  <div class="modal fade" id="bookingModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Manage your bookings</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span class="closeConfirmBooking" aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- Body -->
+        <div class="modal-body">
+          <div class="row" v-for="b in bookings">
+            <div class="col-4">
+              <img class="smallImage" v-bind:src="b.url" alt="restaurant image">
+            </div>
+            <div class="col-8">
+              <h5>{{b.name}}</h5>
+              <p> {{b.date}} | {{b.time}} | {{b.guests}} guests</p>
+              <button class="btn btn-sm btn-primary">Edit</button>
+              <button class="btn btn-sm btn-danger">Remove</button>
+              <button class="btn btn-sm btn-success">Add to Google Calender</button>
+            <hr/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Signing Up Modal -->
+<div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signUpModalTitle">Sign Up</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="fname"><b>First Name</b></label>
+        <input id="fname" type="text" class="fname" placeholder="First Name*" name="fname" required>
+        <label for="lname"><b>Last Name</b></label>
+        <input id="lname" type="text" class="lname" placeholder="Last Name*" name="lname" required>
+
+        <label for="email"><b>Email</b></label>
+        <input id="email" type="text" class="email" placeholder="Email*" name="email" required>
+        <label for="phone"><b>Phone Number (optional)</b></label>
+        <input id="phone" type="text" class="phone" placeholder="Phone Number" name="phone">
+
+        <label for="psw"><b>Password</b></label>
+        <input id="psw" type="password" class="psw" placeholder="Password*" name="psw" required>
+        <label for="psw-repeat"><b>Repeat Password</b></label>
+        <input id="psw-repeat" type="password" class="psw-repeat" placeholder="Repeat Password" name="psw-repeat" required>
+
+
+        <form>
+        <input type="radio" name="user" value="user" checked>User
+        <br />
+        <input type="radio" name="user" value="manager">Restaurant Manager
+        </form>
+
+        <br />
+
+        <p>Already have an account? <a href="#signInModal" data-toggle="modal"  data-dismiss="modal" >Sign in>></a></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Sign up</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for signing in -->
+<div class="modal fade" id="signInModal" tabindex="-1" role="dialog" aria-labelledby="signInModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signInModalTitle">Sign In</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="email-signIn"><b>Email</b></label>
+        <input id="email-signIn" type="text" class="email" placeholder="Email*" name="email" required>
+
+        <label for="psw-signIn"><b>Password</b></label>
+        <input id="psw-signIn" type="password" class="psw" placeholder="Password*" name="psw" required>
+
+        <hr>
+
+        <p style="text-align:center;">Or login via... </p>
+
+        <div class="socialSignin">
+          <button type="button" class="facebook"><i class="fa fa-facebook fa-fw"></i><b>Login with Facebook</b></button>
+          <button type="button" class="google"><i class="fa fa-google fa-fw"></i><b>Login with Google+</b></button>
+        </div>
+        <p><a href="#signUpModal" data-toggle="modal"  data-dismiss="modal">Sign up now>></a></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Sign in</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal to list current bookings -->
+<div id="orders">
+<div class="modal fade" id="bookingHistory">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">Your Orders</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span class="closeConfirmBooking" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Body -->
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-4">
+            <img class="smallImage" alt="restaurant booking image" src="images/featuredRestaurants/1.jpg">
+          </div>
+          <div class="col-8">
+            <h5>Parisi's</h5>
+            <p> 19/05/2019 | 7:30 | 3 guests</p>
+            <button class="btn btn-sm btn-primary">Book again</button>
+            <button class="btn btn-sm btn-success">Leave a review</button>
+          <hr/>
+          </div>
+          <div class="col-4">
+            <img class="smallImage" alt="restaurant booking image" src="images/featuredRestaurants/2.jpg">
+          </div>
+          <div class="col-8">
+            <h5>50SixOne</h5>
+            <p> 20/05/2019 | 15:30 | 5 guests</p>
+            <button class="btn btn-sm btn-primary">Book again</button>
+            <button class="btn btn-sm btn-success">Leave a review</button>
+          <hr/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal for settings -->
+<div class="modal fade" id="settingsModal" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signInModalLabel">Account Settings</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div>
+          <label for="fname"><b>Name: </b>Yuxiao Liu</label>
+          <a class="edit" href="#" onclick="changeName()">Edit</a>
+        </div>
+        <div id="setName" style="display: none">
+        <input id="Changefname" type="text" class="fname" placeholder="First Name" name="fname">
+        <input id="Changelname" type="text" class="lname" placeholder="Last Name" name="lname">
+        </div>
+
+        <div>
+        <label for="email-signIn"><b>Email: </b>example@gmail.com</label>
+        <a class="edit" href="#" onclick="changeEmail()">Edit</a>
+        </div>
+        <div id="setEmail" style="display: none">
+        <input id="change-email-signIn" type="text" class="email" placeholder="Email" name="email">
+        </div>
+
+        <div>
+        <label for="psw-signIn"><b>Password: </b>********</label>
+        <a class="edit" href="#" onclick="changePsw()">Edit</a>
+        </div>
+        <div id="setPsw" style="display: none">
+        <input id="currentPsw" type="password" class="psw" placeholder="Current password" name="psw">
+        <input id="newPsw" type="password" class="psw" placeholder="New password" name="psw">
+        <input id="repeatNewPsw" type="password" class="psw" placeholder="Confirm new password" name="psw">
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success">Update</button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+</div>
+<script src='javascripts/rome.min.js'></script> <!-- date and time picker -->
+<script src="javascripts/bootstrap.min.js"></script>
+<script src="javascripts/search.js"></script>
+<script src="javascripts/homepage.js"></script>
+<script src="javascripts/navigationBar.js"></script>
+<script src="javascripts/history.js"></script>
+<script src="javascripts/settings.js"></script>
+
+</body>
+ 
+</html>

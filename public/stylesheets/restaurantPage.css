@@ -1,0 +1,199 @@
+#restaurantInfo {
+	padding: 2em;
+	height: auto;
+	background-color: white;
+	text-align: left;
+}
+
+.bigImage {
+	max-width: 100%;
+	height: auto;
+}
+
+.headings {
+	font-family: sans-serif;
+}
+
+.navButtons {
+	font-size: 18px;
+	border: none;
+	outline: none;
+	background-color: white;
+	color: dimgrey;
+	cursor: pointer;
+	padding: 15px;
+	border-radius: 4px;
+}
+
+#navigator {
+	background-color: white;
+	position: fixed;
+	position: sticky;
+	top: 0;
+	margin-top:10px
+}
+
+#reserveNow {
+	padding-top: 6vw;
+	text-align: center;
+}
+
+#booking {
+	background-color: #FFC09F;
+	padding: 2em;
+}
+
+#finalConfirm {
+	vertical-align: center;
+}
+
+#buttonConfirmBooking {
+	background-color: rgba(86, 61, 124, 1.0);
+  border-color: rgba(86, 61, 124, 1.0);
+	color: white;
+	height: 4em;
+	font-size: 18px;
+}
+
+#buttonConfirmBooking:hover {
+	background-color: rgba(86, 61, 124, 0.8);
+}
+
+#restaurantName {
+	display: inline;
+}
+
+#location {
+	display: inline;
+	color: dimgrey;
+	font-style: italic;
+}
+
+#guestSetting {
+	padding-top: 5vw;
+	padding-bottom: 2.5vw;
+	padding-left: 1vw;
+}
+
+#dateSetting {
+	padding-top: 2.5vw;
+	padding-bottom: 5vw;
+	padding-left: 1vw;
+}
+
+#timeSetting {
+	padding-left: 1vw;
+	padding-bottom: 5vw;
+}
+
+.icon {
+	color: #563d7c;
+}
+
+/* confirm booking div only scrolls if viewing on a large screen*/
+@media only screen and (min-width: 768px) {
+  
+  #booking {
+	position: fixed;
+	position: sticky;
+	top: 0;
+	}
+}
+
+#nameCB {
+	padding: 10px 20px 8px;
+}
+
+#signInMessage {
+	padding: 25px 20px 15px;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: center;	
+}
+
+.flex-container > div {
+  color: black;
+  width: 140px;
+  margin: 10px;
+  text-align: center;
+}
+
+/* slideshow css */
+img {
+  vertical-align: middle;
+}
+
+.container {
+  position: relative;
+}
+
+.mySlides {
+  display: none;
+}
+
+.cursor {
+  cursor: pointer;
+}
+
+.prev,
+.next {
+  cursor: pointer;
+  position: absolute;
+  top: 40%;
+  width: auto;
+  padding: 16px;
+  margin-top: -50px;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+.prev:hover,
+.next:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+.caption-container {
+  text-align: center;
+  background-color: #222;
+  padding: 2px 16px;
+  color: white;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.column {
+  float: left;
+  width: 16.66%;
+}
+
+.demo {
+  opacity: 0.6;
+}
+
+.active,
+.demo:hover {
+  opacity: 1;
+}

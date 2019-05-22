@@ -1,0 +1,361 @@
+#screen {
+  position: relative;
+}
+
+#screen > img {
+  position: absolute;
+  top: 320px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  width: 90%;
+  height: 600px;
+}
+
+.top {
+  animation-name: fade;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 4s;
+  animation-direction: alternate;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.titleR {
+  position: relative;
+  display: inline-block;
+  width: 80%;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  margin-top: 150px;
+  font-size: 45px;
+}
+
+.containers {
+  position: relative;
+  display: inline-block;
+  width: 70%;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  margin-top: 5%;
+}
+
+.date-containers {
+  width: 50%;
+  float: left;
+  min-width: 350px;
+}
+
+.location-container {
+  width: 50%;
+  float: left;
+  min-width: 350px;
+}
+
+#datePicker, #timePicker, #peopleSelector, #searchQuery {
+  width: 30%;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+}
+
+#searchQuery {
+  width: 100%;
+}
+
+.search-container {
+  position: absolute;
+  width: 10%;
+  min-width: 150px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  margin-top: 30px;
+}
+
+#findTableButton {
+  background-color: green;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#findTableButton:hover {
+  background-color: darkgreen;
+}
+
+.featuredTitle {
+  position: absolute;
+  top: 770px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+}
+
+.titleF {
+  font-size: 25px;
+}
+
+#btnClear {
+  margin-left: 20px;
+}
+
+.specialTitle {
+  position: absolute;
+  top: 1240px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  text-align: center;
+  font-size: 25px;
+  width: 100%;
+}
+
+.titleM {
+  font-size: 20px;
+}
+
+.featured { 
+  width: 200px;
+  height: 200px;
+  border-style: solid;
+  border-color: black;
+  margin-left: 50px;
+  float: left;
+}
+
+.featured > img {
+  width: auto;
+  height: 117px;
+}
+
+.featured:hover{
+  box-shadow: 10px 10px 5px grey;
+}
+
+.titleS {
+  font-size: 25px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.slider {
+  position: absolute;
+  top: 1000px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  width: 90%;
+  text-align: center;
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-points-x: repeat(100px);
+  scroll-snap-type: mandatory;
+}
+.slides::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.slides::-webkit-scrollbar-thumb {
+  background: black;
+}
+.slides::-webkit-scrollbar-track {
+  background: transparent;
+}
+.slides > div {
+  flex-shrink: 0;
+  width: 1050px;
+  height: 300px;
+  background: #eee;
+  transform-origin: center center;
+  transform: scale(1);
+  transition: transform 0.5s;
+  position: relative;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Don't need button navigation */
+@supports (scroll-snap-type) {
+  .slider > a {
+    display: none;
+  }
+}
+
+
+.historyTitle {
+  position: absolute;
+  top: 1450px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  min-height: 100px;
+}
+
+.titleH {
+  font-size: 25px;
+}
+
+#history {
+  position: absolute;
+  top: 1500px;
+  width: 100%;
+}
+
+.reservation {
+  width: 90%;
+  max-width: 1000px;
+  height: 300px;
+  margin: 0 auto 50px auto;
+  border-style: solid;
+  border-color: black;
+  background-color: #eee;
+}
+
+.thumbnail {
+  display: inline-block;
+  position: relative;
+  margin-left: 30px;
+  width: 50%;
+  height: 50%;
+  max-width: 200px;
+  max-height: 200px;
+  margin-top: 40px;
+}
+
+.btnContainer, .name{
+  display: inline-block;
+  position: relative;
+  margin-left: 200px;
+  transform:translate(-50%, -50%);
+}
+
+.name {
+  margin-left: 300px;
+  margin-top: 60px;
+  font-size: 20px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+
+
+.bookAgain, .leaveReview {
+  background-color: black;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+.leaveReview {
+  margin-left: 30px;
+}
+
+.bookAgain:hover{
+  opacity: 1;
+}
+
+.leaveReview:hover {
+  opacity: 1;
+}
+
+.dropdown {
+  height: auto;
+  margin-left: 20px;
+}
+
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidebar a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.openbtn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #111;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+}
+
+.openbtn:hover {
+  background-color: #444;
+}
+
+#main {
+  transition: margin-left .5s;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidebar {padding-top: 15px;}
+  .sidebar a {font-size: 18px;}
+}
+
+.copyright {
+  width: 100%;
+  margin-top: 200px; 
+  top: 1320px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  position: absolute;
+  text-align: center;
+}

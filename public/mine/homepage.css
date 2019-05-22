@@ -1,0 +1,364 @@
+section {
+  position: relative;
+}
+
+section img {
+  position: absolute;
+  top: 250px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  width: 1200px;
+  height: 400px;
+}
+
+.top {
+  animation-name: fade;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-duration: 4s;
+  animation-direction: alternate;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.background {
+  position: absolute;
+  top: 250px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  width: 790px;
+}
+
+.titleR {
+  position: relative;
+  display: inline-block;
+  width: 80%;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  margin-top: 150px;
+  font-size: 45px;
+}
+
+.date-containers, .location-container, .search-container {
+  position: absolute;
+  width: 1200px;
+  top: 400px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  margin-left: 100px;
+}
+
+.location-container {
+  margin-left: 550px;
+}
+
+.search-container {
+	margin-left: 950px;
+}
+
+#datePicker, #timePicker, #peopleSelector, #searchQuery {
+  width: 140px;
+  padding: 10px 20px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+}
+
+
+#searchQuery {
+  width: 330px;
+}
+
+#findTableButton {
+  width: 140px;
+  background-color: green;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#findTableButton:hover {
+  background-color: darkgreen;
+}
+
+.featuredTitle {
+  position: absolute;
+  top: 620px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  width: 1200px;
+}
+
+.titleF {
+  font-size: 25px;
+}
+
+/* Full-width input fields */
+.fname, .lname, .email, .phone, .psw, .psw-repeat {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  border-style: solid;
+  border-color: #ddd;
+}
+
+/* Add a background color when the inputs get focus */
+.fname:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.lname:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.email:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.phone:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.psw:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+.psw-repeat:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for all buttons */
+.cancelbtn, .signupbtn, .signinbtn, .facebook, .google{
+  background-color: #563d7c;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.facebook {
+  background-color: #3B5998;
+  color: white;
+  border-radius: 10px;
+}
+
+.google {
+  background-color: #dd4b39;
+  color: white;
+  border-radius: 10px;
+}
+
+.facebook:hover {
+  opacity: 1;
+}
+
+.google:hover {
+  opacity: 1;
+}
+
+.cancelbtn:hover {
+  opacity:1;
+}
+
+.signupbtn:hover {
+  opacity:1;
+  color: #ffe484;
+}
+
+.signinbtn:hover {
+  opacity:1;
+  color: #ffe484;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  padding: 14px 20px;
+  background-color: black;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.cancelbtn, .signupbtn, .signinbtn {
+  float: left;
+  width: 50%;
+}
+
+/* Add padding to container elements */
+.signup-container, .signin-container {
+  padding: 16px;
+}
+
+.specialTitle {
+  position: absolute;
+  top: 1100px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+}
+
+.titleM {
+  font-size: 20px;
+}
+
+.star path{
+  fill: yellow;
+}
+
+.special-1, .special-2, .special-3, .special-4 {
+  position: absolute;
+  top: 1170px;
+  width: 500px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 25px;
+}
+
+.special-2 {
+  margin-left: 150px;
+}
+
+.special-3 {
+  margin-left: 250px;
+}
+
+.special-4 {
+  margin-left: 400px;
+}
+
+.featured { 
+  width: 200px;
+  height: 200px;
+  border-style: solid;
+  border-color: black;
+  margin-left: 100px;
+  float: left;
+}
+
+.featured > img {
+  width: auto;
+  height: 117px;
+}
+
+.featured:hover{
+  box-shadow: 10px 10px 5px grey;
+}
+
+.titleS {
+  font-size: 25px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.slider {
+  position: absolute;
+  top: 850px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  width: 1000px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-points-x: repeat(300px);
+  scroll-snap-type: mandatory;
+}
+.slides::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.slides::-webkit-scrollbar-thumb {
+  background: black;
+}
+.slides::-webkit-scrollbar-track {
+  background: transparent;
+}
+.slides > div {
+  flex-shrink: 0;
+  width: 1200px;
+  height: 300px;
+  background: #eee;
+  transform-origin: center center;
+  transform: scale(1);
+  transition: transform 0.5s;
+  position: relative;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Don't need button navigation */
+@supports (scroll-snap-type) {
+  .slider > a {
+    display: none;
+  }
+}
+
+
+.historyTitle {
+  position: absolute;
+  top: 1350px;
+  left: 50%;
+  transform:translate(-50%, -50%);
+  width: 1200px;
+}
+
+.titleH {
+  font-size: 25px;
+  padding-bottom: 500px;
+}
+
+#history {
+  position: absolute;
+  top: 1450px;
+  width: 100%;
+}
+
+.reservation {
+  width: 1100px;
+  height: 250px;
+  margin: 0 auto 50px auto;
+  border-style: solid;
+  border-color: black;
+  background-color: #eee;
+}
+
+.bookAgain {
+  position: block;
+  width: 300px;
+  height: 150px;
+}
+

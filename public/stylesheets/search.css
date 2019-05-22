@@ -1,0 +1,19 @@
+/* ------------------------------------------------- */
+/* search */
+
+.reservationButtons {
+  border-color: #0c6472;
+  border-width: 1px;
+}
+
+#modalFilterButton {
+  background-color: #5f768e;
+  border-color: #5f768e;
+}
+
+/* ------------------------------------------------- */
+/* Search Bar Style */
+
+#findTableButton {
+  width:100%;
+}
