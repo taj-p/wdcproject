@@ -54,7 +54,7 @@
       </a>
       <div class="dropdown-menu">
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bookingHistory">Booking History</a>
-        <a class="dropdown-item" href="owner.html">Manage Restaurant</a>
+        <a class="dropdown-item" href="manager.html">Manage Restaurant</a>
         <a class="dropdown-item" data-toggle="modal" href="#settingsModal">Settings</a>
         <a class="dropdown-item" href="#">Log out</a>
       </div>
@@ -234,42 +234,42 @@
 <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalTitle" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
+      <!-- Header -->
       <div class="modal-header">
         <h5 class="modal-title" id="signUpModalTitle">Sign Up</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+
+      <!-- Body -->
       <div class="modal-body">
-        <label for="fname"><b>First Name</b></label>
-        <input id="fname" type="text" class="fname" placeholder="First Name*" name="fname" required>
-        <label for="lname"><b>Last Name</b></label>
-        <input id="lname" type="text" class="lname" placeholder="Last Name*" name="lname" required>
-
-        <label for="email"><b>Email</b></label>
-        <input id="email" type="text" class="email" placeholder="Email*" name="email" required>
-        <label for="phone"><b>Phone Number (optional)</b></label>
-        <input id="phone" type="text" class="phone" placeholder="Phone Number" name="phone">
-
-        <label for="psw"><b>Password</b></label>
-        <input id="psw" type="password" class="psw" placeholder="Password*" name="psw" required>
-        <label for="psw-repeat"><b>Repeat Password</b></label>
-        <input id="psw-repeat" type="password" class="psw-repeat" placeholder="Repeat Password" name="psw-repeat" required>
-
-
         <form>
-        <input type="radio" name="user" value="user" checked>User
-        <br />
-        <input type="radio" name="user" value="manager">Restaurant Manager
+          <label for="email"><b>Email</b></label>
+          <input id="email-signUp" type="text" class="email" placeholder="Email*" name="email" required>
+
+          <label for="psw"><b>Password</b></label>
+          <input id="psw-signUp" type="password" class="psw" placeholder="Password*" name="psw" required>
+
+          <label for="psw-signUp-repeat"><b>Repeat Password</b></label>
+          <input id="psw-signUp-repeat" type="password" class="psw-repeat" placeholder="Repeat Password" name="psw-repeat" required>
+
+          <input type="radio" name="account-type" value="user" required /> User 
+          <br />
+          <input type="radio" name="account-type" value="manager" required /> Restaurant Manager
+
+          <br />
+
+          <p>Already have an account? <a href="#signInModal" data-toggle="modal"  data-dismiss="modal" >Sign in>></a></p>
+          
+          <br />
+
+          <!-- Footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" onclick="signUp()">Sign up</button>
+          </div>
         </form>
-
-        <br />
-
-        <p>Already have an account? <a href="#signInModal" data-toggle="modal"  data-dismiss="modal" >Sign in>></a></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Sign up</button>
       </div>
     </div>
   </div>
@@ -305,7 +305,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Sign in</button>
+        <button type="button" class="btn btn-primary" onclick="login();">Sign in</button>
       </div>
     </div>
   </div>
