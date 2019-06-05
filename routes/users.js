@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var moment = require('moment');
 
 router.use(function(req, res, next) {
 	if (req.session.user === true) {
@@ -68,20 +69,142 @@ router.post('/deleteAccount', function(req, res, next) {
 /*
  RESTAURANT GUEST REGISTERED USERS
  */
-// router.get('/guestUpcomingReserations', function (req, res, next) {
-// 	if (req.session.manager === true) {
-// 		res.sendStatus(403);
-// 	}
+// Get user's upcoming reservations
+// Possible queries: history (value true), upcoming (value true). 
+//   Eg. /userReservations.json?history=true
+// Request: depends on query. If no query, send empty request body
+// If history/upcoming: send JSON object with
+//   date in format "YYYY-MM-DD", or JSON {year (int), month (indexed at 0, e.g. Jan = 0), day}
+//   time in format JSON {hour, minute}
+// Response: array of json object that contains
+// guest_id, account_id, name_first, name_last, phone_number, booking_id, restaurant_id, guest_id, 
+// start_time, date, guest_number, additional_info 
+router.get('/userReservations.json', function (req, res, next) {
+	if (req.session.manager === true) {
+		res.sendStatus(403);
+	}
 
-// 	req.pool.getConnection(function(err, connection) {
-// 		if (err) {
-// 			res.send();
-// 			throw err;
-// 		}
+	req.pool.getConnection(function(err, connection) {
+		if (err) {
+			res.send();
+			throw err;
+		}
 
-// 		var query = "SELECT"
-// 	})
-// }
+		var query = "SELECT * FROM guest INNER JOIN booking ON guest.guest_id = booking.guest_id " +
+			"WHERE guest.account_id=? ";
+		var inserts = [req.session.userid];
+
+		var subqueries = "";
+		if (Object.keys(req.query).length > 0) {
+			var date = moment(req.body.date).format("YYYY-MM-DD");
+    		var time = moment(req.body.time).format("kk:mm:ss");
+
+			if (param === "history") {
+				if (req.query[param] === "true") {
+					subqueries = "AND DATE < ? AND start_time < ? ";
+					inserts.push(date);
+					inserts.push(time);
+				}
+			} else if (param === "upcoming") {
+				if (req.query[param] === "true") {
+					"AND DATE >= ? AND start_time >= ? ";
+					inserts.push(date);
+					inserts.push(time);
+				}
+			}
+		}
+
+		query = query + subqueries + " LIMIT 10;";
+		connection.query(query, inserts, function(err, results, fields) {
+			if (err) {
+				console.log(err);
+				res.send();
+			}
+			connection.release();
+			res.json(results);
+		});
+	});
+});
+
+// Request: JSON object containing (must contain all of them, even if no changes are made)
+//    booking_id, time, date, pax, additional_info, name_first, name_last (can be "NULL"),
+//    phone_number
+// Response: nothing (200)
+router.post('/updateUserReservation', function (req, res, next) {
+	if (req.session.manager === true) {
+		res.sendStatus(403);
+	}
+
+	req.pool.getConnection(function(err, connection) {
+		if (err) {
+			res.send();
+			throw err;
+		}
+
+		// Update booking info (date, time, pax, additional info)
+		var date = moment(req.body.date).format("YYYY-MM-DD");
+    	var time = moment(req.body.time).format("kk:mm:ss");
+		var query = "UPDATE booking SET start_time=? AND date=? AND guest_number=? " + 
+			"additional_info=? WHERE booking_id=? AND account_id=? AND DATE >= NOW();";
+		var inserts = [time, date, req.body.pax, req.body.additional_info,
+			req.body.booking_id, req.session.userid];
+		connection.query(query, inserts, function(err, results, fields) {
+			if (err) {
+				console.log(err);
+				res.send();
+			}
+			connection.release();
+			
+			// Update guest info (name, phone)
+			req.pool.getConnection(function(err, connection) {
+				if (err) {
+					res.send();
+					throw err;
+				}
+
+				var query = "UPDATE guest SET guest.name_first=? AND guest.name_last=? " + 
+					"AND guest.phone_number=? FROM guest INNER JOIN booking ON guest.guest_id=" + 
+					"booking.guest_id WHERE booking.booking_id=? AND guest.account_id=?;";
+				var inserts = [req.body.name_first, req.body.name_last, req.body.phone_number,
+					req.session.booking_id, req.session.userid];
+				connection.query(query, inserts, function(err, results, fields) {
+					if (err) {
+						console.log(err);
+						res.send();
+					}
+					connection.release();
+					res.send();
+				});
+			});
+		});
+	});
+});
+
+// Request: JSON object containing booking_id
+// Response: nothing (200)
+router.post('/deleteUserReservation', function (req, res, next) {
+	if (req.session.manager === true) {
+		res.sendStatus(403);
+	}
+
+	req.pool.getConnection(function(err, connection) {
+		if (err) {
+			res.send();
+			throw err;
+		}
+
+		var query = "DELETE FROM booking WHERE booking_id=? AND account_id=?;";
+		var inserts = [req.body.booking_id, req.session.userid];
+		connection.query(query, inserts, function(err, results, fields) {
+			if (err) {
+				console.log(err);
+				res.send();
+			}
+			connection.release();
+			res.send();
+		});
+	});
+});
 
 /*
  MANAGER

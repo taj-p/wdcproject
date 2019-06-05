@@ -209,6 +209,9 @@ router.get('/reservationWBookingId.json', function(req, res, next) {
 // Returns array of restaurant objects
 // request: NONE
 // possible query (encode before get request): cuisine, diet_options, search 
+// NOTE: queries are case-sensitive, 
+//  keep cuisine and diet_option values lower case
+//  Name and street/suburb names should start with upper case
 // response: array of JSON (restaurant_id, name, address, phone, description, cost, cuisine, 
 // diet_options, review_count)
 router.get('/restaurant.json', function(req, res, next) {
@@ -268,8 +271,6 @@ router.get('/restaurant.json', function(req, res, next) {
         }
       } 
       query = query + search_condition + " LIMIT 50;";
-      console.log(query);
-      console.log(inserts);
 
       connection.query(query, inserts, function(err, rows, fields) {
           if (err) {
