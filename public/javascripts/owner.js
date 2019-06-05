@@ -92,7 +92,7 @@ function fillRestaurantInfo() {
 	};
 
 	// Open connection
-	xhttp.open("GET", "/users/getRestInfo", true);
+	xhttp.open("GET", "/users/restInfo.json", true);
 
 	// Send request
 	xhttp.send();
