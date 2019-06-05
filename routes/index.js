@@ -93,8 +93,14 @@ router.post('/signup', function(req, res, next) {
 
 // To set session user = false
 router.post('/logout', function(req, res, next) {
-  req.session.user = false;
-  res.send();
+  // If valid session present, unset user.
+  if(req.session.user !== undefined) {
+      delete req.session.user;
+      delete req.session.userid;
+      delete req.session.manager;
+  }
+
+  res.sendStatus(200);
 });
 
 // get restaurant image - doesn't require having an account

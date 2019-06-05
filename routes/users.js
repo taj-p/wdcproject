@@ -358,6 +358,7 @@ router.get('/manager.json', function(req, res, next) {
 	}
 });
 
+/////// RESTAURANT INFO
 // Select restaurant to manage
 router.post('/selectRest', function (req, res, next) {
 	if (req.session.manager != true) {
@@ -368,7 +369,6 @@ router.post('/selectRest', function (req, res, next) {
 	next();
 });
 
-/////// RESTAURANT INFO
 // GET request of manager - parameter : account id
 router.get('/restInfo.json', function(req, res, next) {
 	if (req.session.manager != true) {
