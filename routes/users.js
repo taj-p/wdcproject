@@ -206,6 +206,105 @@ router.post('/deleteUserReservation', function (req, res, next) {
 	});
 });
 
+// Get all current reviews made by user
+router.get('/userReview', function (req, res, next) {
+	if (req.session.manager === true) {
+		res.sendStatus(403);
+	}
+
+	req.pool.getConnection(function(err, connection) {
+		if (err) {
+			res.send();
+			throw err;
+		}
+
+		var query = "SELECT * FROM review WHERE account_id=?;";
+		var inserts = [req.session.userid];
+		connection.query(query, inserts, function(err, results, fields) {
+			if (err) {
+				console.log(err);
+				res.send();
+			}
+			connection.release();
+			res.json(results);
+		});
+	});
+});
+
+// Modify a current review made by user
+// request body: JSON containing review_id, name_display, description, noise (in lower case),
+//    rating_overall (INT out of 5), rating_value(INT out of 5), rating_service (INT out of 5),
+//    rating_food(INT out of 5), rating_ambience (INT out of 5),
+// respondy body: empty (200)
+router.post('/userReview', function (req, res, next) {
+	if (req.session.manager === true) {
+		res.sendStatus(403);
+	}
+
+	req.pool.getConnection(function(err, connection) {
+		if (err) {
+			res.send();
+			throw err;
+		}
+
+		var query = "UPDATE review SET name_display=?, description=?, noise=?, rating_overall=?, " +
+			"rating_value=?, rating_service=?, rating_food=?, rating_ambience=? " + 
+			"WHERE account_id=? AND review_id=?;";
+		var inserts = [req.body.name_display, req.body.description, req.body.noise,
+			req.body.rating_overall, req.body.rating_value, req.body.rating_service,
+			req.body.rating_food, req.body.rating_ambience, req.session.userid, req.body.review_id];
+		connection.query(query, inserts, function(err, results, fields) {
+			if (err) {
+				console.log(err);
+				res.send();
+			}
+			connection.release();
+			res.send();
+		});
+	});
+});
+
+// ADD a current review from a user
+// request body: JSON containing review_id, name_display, description, noise (in lower case),
+//    rating_overall (INT out of 5), rating_value(INT out of 5), rating_service (INT out of 5),
+//    rating_food(INT out of 5), rating_ambience (INT out of 5),
+// respondy body: empty (200)
+// NOTE: Can't seem to do a insert query wtith a WHERE clause (to check if user has been to the
+// restaurant). Should only call this post, when user has been to the restaurant. Can do this by
+// showing user a list of restaurants they've been to through GET /userReservations.json so users
+// can only review retaurants they've been to
+router.post('/newReview', function (req, res, next) {
+	if (req.session.manager === true) {
+		res.sendStatus(403);
+	}
+
+	req.pool.getConnection(function(err, connection) {
+		if (err) {
+			res.send();
+			throw err;
+		}
+
+		var newReviewID = uuid.v4();
+		var query = "INSERT INTO review (review_id, restaurant_id, account_id, name_display, " +
+			"description, noise, rating_overall, rating_value, rating_service, rating_food, " + 
+			"rating_ambience) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+			WHERE account INNER JOIN booking ON account.guest_id = booking.guest_id 
+		var inserts = [newReviewID, req.body. restaurant_id, req.session.userid,
+			req.body.name_display, req.body.description, req.body.noise,
+			req.body.rating_overall, req.body.rating_value, req.body.rating_service,
+			req.body.rating_food, req.body.rating_ambience, req.session.userid, req.body.review_id];
+		connection.query(query, inserts, function(err, results, fields) {
+			if (err) {
+				console.log(err);
+				res.send();
+			}
+			connection.release();
+			res.send();
+		});
+	});
+});
+
+
 /*
  MANAGER
  */
@@ -321,7 +420,6 @@ router.post('/updateRestInfo', function(req, res, next) {
 router.post('/deleteRestInfo', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
-		next('route');
 	}
 	
 	// connect to the database
@@ -345,7 +443,6 @@ router.post('/deleteRestInfo', function(req, res, next) {
 router.post('/addRestImg', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
-		next('route');
 	}
 	
 	// connect to the database
@@ -370,7 +467,6 @@ router.post('/addRestImg', function(req, res, next) {
 router.post('/deleteRestImg', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
-		next('route');
 	}
 	
 	// connect to the database
@@ -603,7 +699,6 @@ router.post('/updateRestBookEst', function(req, res, next) {
 			function(err, rows, fields) {
 				if (err) {
 					res.sendStatus(403);
-					next('route');
 				}
 				connection.release();
 				res.send();
@@ -631,7 +726,6 @@ router.post('/deleteRestBookEst', function(req, res, next) {
 			function(err, rows, fields) {
 				if (err) {
 					res.sendStatus(403);
-					next('route');
 				}
 				connection.release();
 				res.send();

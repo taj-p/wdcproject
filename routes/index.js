@@ -163,7 +163,7 @@ router.get('/restOpenings.json', function(req, res, next) {
 // get restaurant reviews - doesn't require having an account
 // request: restaurant_id
 // response: array of JSON (review_id, name_display, description, noise, rating_overall,
-// rating_value, rating_service, rating_food, rating_ambience)
+// rating_value, rating_service, rating_food, rating_ambience), each represents a review
 // NOTE: ratings are integers
 router.get('/restReviews.json', function(req, res, next) {
   // connect to the database
