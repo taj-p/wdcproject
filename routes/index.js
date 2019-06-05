@@ -183,6 +183,8 @@ router.get('/restReviews.json', function(req, res, next) {
   });
 });
 
+
+/////////////// Reservations with just booking id and last name
 // get booking for guests without account
 // request: booking_id, name_last
 // response: array of JSON (booking_id, restaurant_id, guest_id, start_time, date, guest_number, 
@@ -202,6 +204,65 @@ router.get('/reservationWBookingId.json', function(req, res, next) {
       function(err, rows, fields) {
         connection.release();
         res.json(rows);
+    });
+  });
+});
+
+// Request body: JSON object containing (must contain all of them, even if no changes are made)
+//    booking_id, time, date, pax, additional_info, name_first, name_last (can NOT be NULL),
+//    phone_number
+// Response: nothing (200)
+// Response body: empty (200)
+router.post('/updateReservationWBookingId', function(req, res, next) {
+  // connect to the database
+  req.pool.getConnection(function(err, connection) {
+    if (err) {
+      res.send();
+      throw err;
+    }
+    var date = moment(req.body.date).format("YYYY-MM-DD");
+    var time = moment(req.body.time).format("kk:mm:ss");
+    var query = "UPDATE booking INNER JOIN guest ON booking.guest_id=guest.guest_ID " +
+      "SET booking.start_time=? AND booking.date=? AND booking.guest_number=? " + 
+      "booking.additional_info=? AND guest.name_first=? AND guest.name_last=? "+
+      "AND guest.phone_number=? WHERE booking.booking_id=? AND "+
+      "guest.name_last=? AND DATE >= NOW();";
+
+    var inserts = [time, date, req.body.pax, req.body.additional_info, req.body.name_first,
+      req.body.name_last, req.body.phone_number, req.body.booking_id, req.body.name_last];
+    connection.query(query, inserts, function(err, results, fields) {
+      if (err) {
+        console.log(err);
+        res.send();
+      }
+
+      connection.release();
+      res.send();
+    });
+  });
+});
+
+// Request body: booking_id, last name
+// Response body: empty (200)
+router.post('/deleteReservationWBookingId', function(req, res, next) {
+  // connect to the database
+  req.pool.getConnection(function(err, connection) {
+    if (err) {
+      res.send();
+      throw err;
+    }
+
+    var query = "DELETE booking.* FROM booking "+
+      "INNER JOIN guest ON booking.guest_id = guest.guest_id " +
+      "WHERE booking.booking_id=? AND guest.name_last=?;";  
+    connection.query(query, [req.body.booking_id, req.body.name_last],
+      function(err, rows, fields) {
+        if (err) {
+          console.log(err);
+          res.send();
+        }
+        connection.release();
+        res.send();
     });
   });
 });

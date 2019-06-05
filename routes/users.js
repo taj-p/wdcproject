@@ -162,11 +162,11 @@ router.post('/updateUserReservation', function (req, res, next) {
 					throw err;
 				}
 
-				var query = "UPDATE guest SET guest.name_first=? AND guest.name_last=? " + 
-					"AND guest.phone_number=? FROM guest INNER JOIN booking ON guest.guest_id=" + 
-					"booking.guest_id WHERE booking.booking_id=? AND guest.account_id=?;";
+				var query = "UPDATE guest INNER JOIN booking ON guest.guest_id=booking.guest_id "+
+					"SET guest.name_first=? AND guest.name_last=? AND guest.phone_number=? " + 
+					"WHERE booking.booking_id=? AND guest.account_id=?;";
 				var inserts = [req.body.name_first, req.body.name_last, req.body.phone_number,
-					req.session.booking_id, req.session.userid];
+					req.body.booking_id, req.session.userid];
 				connection.query(query, inserts, function(err, results, fields) {
 					if (err) {
 						console.log(err);
@@ -556,7 +556,7 @@ router.post('/deleteRestImg', function(req, res, next) {
 		}
 
 		var imgID = uuid.v4();
-		var query = "DELETE FROM rest_img_url.* " +
+		var query = "DELETE rest_img_url.* FROM rest_img_url " +
 			"INNER JOIN restaurant ON rest_img_url.restaurant_id = restaurant.restaurant_id " +
 			"INNER JOIN account ON restaurant.account_id = account.account_id " +
 			"WHERE rest_img_url.restaurant_id=? AND rest_img_url.img_id=? AND restaurant.account_id=?;";
@@ -889,7 +889,8 @@ router.get('/restaurantReservations.json', function (req, res, next) {
 			throw err;
 		}
 
-		var query = "SELECT guest.*, booking.* FROM guest INNER JOIN booking ON guest.guest_id = booking.guest_id " +
+		var query = "SELECT guest.*, booking.* FROM guest" +
+			"INNER JOIN booking ON guest.guest_id=booking.guest_id " +
 			"INNER JOIN restaurant ON booking.restaurant_id=restaurant.restaurant_id " + 
 			"WHERE booking.restaurant_id=? AND restaurant.account_id=? ";
 		var inserts = [req.session.restaurantid, req.session.userid];
@@ -1000,7 +1001,7 @@ router.post('/deleteUserReservation', function (req, res, next) {
 			throw err;
 		}
 
-		var query = "DELETE FROM booking .* FROM booking "+
+		var query = "DELETE booking .* FROM booking "+
 			"INNER JOIN restaurant ON restaurant.restaurant_id=booking.restaurant_id " + 
 			"WHERE booking.booking_id=? AND booking.restaurant_id=? restaurant.account_id=?;";
 		var inserts = [req.body.booking_id, req.session.restaurantid, req.session.userid];
