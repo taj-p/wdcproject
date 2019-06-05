@@ -109,7 +109,20 @@ function getResults() {
     }
   };
 
-  xhttp.open("GET", "/restaurantResults.txt", true);
+  var url = new URL(window.location.href);
+  const pax = url.searchParams.get("numguests");
+  const search = url.searchParams.get("search");
+  const date = url.searchParams.get("date");
+  const time = url.searchParams.get("time");
+
+  var POSTurl = "/restaurantResults.txt?" +
+                "date=" + date + "&" +
+                "time=" + time + "&" +
+                "numguests=" + pax + "&" +
+                "search=" + search;
+
+
+  xhttp.open("GET", POSTurl, true);
   xhttp.send();
 }
 
