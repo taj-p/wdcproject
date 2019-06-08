@@ -293,6 +293,10 @@
   margin-left: 20px;
 }
 
+.googleLogin, .fbLogin {
+  width: 500px;
+}
+
 .sidebar {
   height: 100%;
   width: 0;

@@ -4,6 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="google-signin-client_id" content="179118281029-2o2h1vnkb8a65a0ncf7afndtrgu7hd5v.apps.googleusercontent.com">
+
 <meta name="description" content="Restaurant website homepage">
 <meta name="author" content="Yuxiao Liu">
 <title>Restaurant4u Homepage</title>
@@ -14,6 +16,10 @@
 
 <!-- jquery CDN -->
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
+
+<!-- load the Google platform library -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
 <!-- date and time picker -->
 <link href='stylesheets/rome.min.css' rel='stylesheet'>
@@ -48,15 +54,15 @@
       <div class="collapse navbar-collapse" id="navbarToggleItems">
       <a class="nav-item nav-link" id="signUp" href="#" data-toggle="modal" data-target="#signUpModal">Sign up</a>
       <a class="nav-item nav-link" id="signIn" href="#" data-toggle="modal" data-target="#signInModal">Sign in</a>
-	    <a class="nav-item nav-link active" id="manageBooking" href="#" onclick="$('#bookingModal').modal('show');">Manage Bookings</a>
-      <div class="dropdown"><a class="nav-link dropdown-toggle" id="account" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <a class="nav-item nav-link active" id="manageBooking" href="#" onclick="$('#bookingModal').modal('show');">Manage Bookings</a>
+      <div class="dropdown"><a class="nav-link dropdown-toggle" id="account" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:none">
         Account
       </a>
       <div class="dropdown-menu">
         <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bookingHistory">Booking History</a>
         <a class="dropdown-item" href="manager.html">Manage Restaurant</a>
         <a class="dropdown-item" data-toggle="modal" href="#settingsModal">Settings</a>
-        <a class="dropdown-item" href="#">Log out</a>
+        <a class="dropdown-item" href="#" onclick="logout()">Log out</a>
       </div>
       </div>
     </div>
@@ -110,7 +116,7 @@
 
     <div class="location-container">
       <!-- search query --> 
-      <input id='searchQuery' type='text' value placeholder='Adelaide' class='input middleRowElement'>
+      <input id='searchQuery' type='text' value placeholder='Location, Restaurant, or Cuisine' class='input middleRowElement'>
     </div>
   </div>
 
@@ -297,8 +303,8 @@
         <p style="text-align:center;">Or login via... </p>
 
         <div class="socialSignin">
-          <button type="button" class="facebook"><i class="fa fa-facebook fa-fw"></i><b>Login with Facebook</b></button>
-          <button type="button" class="google"><i class="fa fa-google fa-fw"></i><b>Login with Google+</b></button>
+          <div class="g-signin2" data-onsuccess="onSignIn"></div>
+          <fb:login-button scope="public_profile,email" id="fbLogin" onlogin="checkLoginState();"></fb:login-button>
         </div>
         <p><a href="#signUpModal" data-toggle="modal"  data-dismiss="modal">Sign up now>></a></p>
       </div>
@@ -368,16 +374,7 @@
       <div class="modal-body">
 
         <div>
-          <label for="fname"><b>Name: </b>Yuxiao Liu</label>
-          <a class="edit" href="#" onclick="changeName()">Edit</a>
-        </div>
-        <div id="setName" style="display: none">
-        <input id="Changefname" type="text" class="fname" placeholder="First Name" name="fname">
-        <input id="Changelname" type="text" class="lname" placeholder="Last Name" name="lname">
-        </div>
-
-        <div>
-        <label for="email-signIn"><b>Email: </b>example@gmail.com</label>
+        <label for="email-signIn" id="email-setting"></label>
         <a class="edit" href="#" onclick="changeEmail()">Edit</a>
         </div>
         <div id="setEmail" style="display: none">
@@ -385,7 +382,7 @@
         </div>
 
         <div>
-        <label for="psw-signIn"><b>Password: </b>********</label>
+        <label for="psw-signIn"><b>Password: </b>******</label>
         <a class="edit" href="#" onclick="changePsw()">Edit</a>
         </div>
         <div id="setPsw" style="display: none">
@@ -398,7 +395,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-success">Update</button>
+        <button type="button" class="btn btn-success" onclick="settings()">Update</button>
       </div>
     </div>
     </div>
@@ -412,6 +409,7 @@
 <script src="javascripts/navigationBar.js"></script>
 <script src="javascripts/history.js"></script>
 <script src="javascripts/settings.js"></script>
+<script src="javascripts/signUp.js"></script>
 
 </body>
  

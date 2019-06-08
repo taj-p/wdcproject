@@ -12,7 +12,7 @@ function fillManagerPage() {
 	};
 
 	// Open connection
-	xhttp.open("GET", "/users/manager.json", true);
+	xhttp.open("GET", "/users/manager", true);
 
 	// Send request
 	xhttp.send();

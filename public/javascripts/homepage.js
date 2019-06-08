@@ -19,7 +19,18 @@ function login() {
   // Handle response
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      alert("Success");
+
+
+    alert("Success");
+
+	  document.getElementById("signUp").style.display = "none"; 
+	  document.getElementById("signIn").style.display = "none";
+	  $('#signInModal').modal('hide');
+	  document.getElementById("account").style.display = "block";
+    document.getElementById("email-setting").innerHTML = "<b>Email: </b>"+document.getElementById('email-signIn').value;
+
+
+
     } else if (this.readyState == 4 && this.status == 403){
       alert("E-mail / password incorrect");
     }
@@ -64,6 +75,7 @@ function signUp() {
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
           alert("Success");
+
         }
       };
 
@@ -78,6 +90,37 @@ function signUp() {
     }
   }
 };
+
+
+
+function settings() {
+  // Create new AJAX request
+  var xhttp = new XMLHttpRequest();
+
+  // Handle response
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    alert("Success");
+    }
+  };
+
+  // Open connection
+  xhttp.open("POST", "/settings", true);
+
+  // Send request
+  // Set content type to JSON
+  xhttp.setRequestHeader("Content-type", "application/json");
+
+  xhttp.send(
+    JSON.stringify({
+      email: document.getElementById('change-email-signIn').value,
+      pass: document.getElementById('newPsw').value
+    })
+  );
+};
+
+
+
 
 const FEATUREDRESTAURANTS = [[{id: 1, img: "images/featuredRestaurants/1.jpg",  title: "Parisis"},
                               {id: 2, img: "images/featuredRestaurants/2.jpg",  title: "Raj on Taj"},

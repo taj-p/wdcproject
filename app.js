@@ -10,7 +10,7 @@ var moment = require('moment');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var dbConnectionPool = mysql.createPool({host: 'localhost', database: 'restaurant_site', connectionLimit: 0, queueLimit: 0, multipleStatements: true});
+var dbConnectionPool = mysql.createPool({host: 'localhost', database: 'restaurant_site'});
 
 var app = express();
 

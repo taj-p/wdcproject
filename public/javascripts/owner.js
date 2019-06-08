@@ -83,8 +83,8 @@ function fillRestaurantInfo() {
 			restaurantInfo.name = results[0].name;
 			// Address
 			var add = JSON.parse(results[0].address);
-			restaurantInfo.address = add.street + ", " + add.suburb + ", " + add.state + ", " +
-				 add.postal_code;
+			restaurantInfo.address = add.Street + ", " + add.Suburb + ", " + add.State + ", " +
+				 add.Postal_code;
 			restaurantInfo.description = results[0].description;
 			restaurantInfo.cost = results[0].cost;
 			// todo: pre-fill cuisines
@@ -92,7 +92,7 @@ function fillRestaurantInfo() {
 	};
 
 	// Open connection
-	xhttp.open("GET", "/users/restInfo.json", true);
+	xhttp.open("GET", "/users/getRestInfo", true);
 
 	// Send request
 	xhttp.send();
