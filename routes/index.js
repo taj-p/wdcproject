@@ -118,10 +118,11 @@ router.get('/restImg.json', function(req, res, next) {
     }
 
     var query = "SELECT img_url FROM rest_img_url WHERE restaurant_id=? AND is_menu=false;";
-    connection.query(query, [req.body.restaurant_id],
+    connection.query(query, [req.query.restaurant_id],
       function(err, rows, fields) {
         connection.release();
-        res.json(rows);
+        console.log(rows);
+        res.send(rows);
     });
   });
 });
@@ -137,7 +138,7 @@ router.get('/restMenuImg.json', function(req, res, next) {
       throw err;
     }
 
-    var query = "SELECT img_url FROM rest_img_url WHERE restaurant_id=? AND is_menu=true;";  
+    var query = "SELECT img_url FROM rest_img_url WHERE restaurant_id=? AND is_menu=true;";
     connection.query(query, [req.body.restaurant_id],
       function(err, rows, fields) {
         connection.release();
@@ -184,7 +185,7 @@ router.get('/restReviews.json', function(req, res, next) {
 
     var query = "SELECT review_id, name_display, description, noise, rating_overall, rating_value, "+
       "rating_service, rating_food, rating_ambience FROM review WHERE restaurant_id=?;";
-    connection.query(query, [req.body.restaurant_id],
+    connection.query(query, [req.query.restaurant_id],
       function(err, rows, fields) {
         connection.release();
         res.json(rows);
@@ -232,7 +233,7 @@ router.post('/updateReservationWBookingId', function(req, res, next) {
     var date = moment(req.body.date).format("YYYY-MM-DD");
     var time = moment(req.body.time).format("kk:mm:ss");
     var query = "UPDATE booking INNER JOIN guest ON booking.guest_id=guest.guest_ID " +
-      "SET booking.start_time=? AND booking.date=? AND booking.guest_number=? " + 
+      "SET booking.start_time=? AND booking.date=? AND booking.guest_number=? " +
       "booking.additional_info=? AND guest.name_first=? AND guest.name_last=? "+
       "AND guest.phone_number=? WHERE booking.booking_id=? AND "+
       "guest.name_last=? AND DATE >= NOW();";
@@ -263,7 +264,7 @@ router.post('/deleteReservationWBookingId', function(req, res, next) {
 
     var query = "DELETE booking.* FROM booking "+
       "INNER JOIN guest ON booking.guest_id = guest.guest_id " +
-      "WHERE booking.booking_id=? AND guest.name_last=?;";  
+      "WHERE booking.booking_id=? AND guest.name_last=?;";
     connection.query(query, [req.body.booking_id, req.body.name_last],
       function(err, rows, fields) {
         if (err) {
@@ -370,6 +371,57 @@ router.get('/restaurant.json', function(req, res, next) {
       });
     });
   }
+});
+
+// Returns a restaurant objects
+// request: restaurant_id
+// response: JSON of (restaurant_id, name, address, phone, description, cost, cuisine,
+// diet_options, review_count)
+router.get('/restaurantPage.json', function(req, res, next) {
+  req.pool.getConnection(function(err, connection) {
+    if (err) {
+      res.send();
+      throw err;
+    }
+
+      //var availability_promises = [];
+      //var overall_ratings_promises = [];
+      //for (var i = 0; i < rows.length; i++) {
+      //  var time = moment(req.query.date + " " + req.query.time, 'YYYY-MM-DD HH:mm');
+      //  availability_promises.push(determineAvailability(connection, req, time.format("YYYY-MM-DD"), time.format("kk:mm:ss"), rows[i].restaurant_id, req.query.numguests));
+      //  overall_ratings_promises.push(determineOverallRating(connection, rows[i].restaurant_id));
+      //}
+
+      //Promise.all(availability_promises)
+      //  .then((availabilities) => {
+      //    for (i = 0; i < rows.length; i++) {
+      //      rows[i].availableTimes = availabilities[i];
+      //    }
+
+    var result_promises = [];
+    result_promises.push(new Promise((resolve, reject) => {
+        var query = "SELECT restaurant_id, name, address, phone, description, cost, cuisine, " +
+          "diet_options, review_count FROM restaurant WHERE restaurant_id = ?;";
+        connection.query(query, [req.query.restaurant_id], function(err, rows, fields) {
+          if (err) {
+            res.send();
+            throw err;
+          }
+          resolve(rows[0]);
+        });
+      }));
+
+    result_promises.push(determineOverallRating(connection, req.query.restaurant_id));
+
+    var final_result = {};
+    Promise.all(result_promises)
+      .then((results) => {
+        final_result = results[0];
+        final_result.overall_rating = results[1];
+        console.log(final_result);
+        res.send(final_result);
+      });
+  });
 });
 
 // Returns a Promise of an array of times of the availability for the given restaurant_id for the

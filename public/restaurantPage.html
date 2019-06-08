@@ -66,7 +66,6 @@
           <p> <a href='/'>Home</a> > <a id='searchBreadcrumb' href="">Search</a> > <i id="breadcrumbName">{{ name }}</i> </p>
       </div>
     </div>
-  </div>
 
     <!-- restaurant information -->
     <div class="container-fluid">
@@ -78,7 +77,7 @@
           </div>
           <!-- todo: Replace positives and negative stars -->
           <p>
-            <li class="fas fa-star icon" v-for="n in overallPosRating"></li><li class="far fa-star icon" v-for="n in overallNegRating"></li>| {{nReviews}} reviews | {{cuisine}} | {{cost}}
+          <span id="topInfo"></span>
           </p> <!-- To be populated with rating, review count, cuisine, and price rating of selected restaurant -->
 
           <!-- slideshow -->
@@ -103,7 +102,6 @@
             <h2 class="headings" id="aboutSection"><b>About</b></h2>
             <p id="aboutInfo"> {{ about }} </p>
           </div>
-        </div>
 
           <!-- menu section -->
           <div class="section">
@@ -118,16 +116,12 @@
             <div class="row" v-for="r in reviews">
               <div id="username" class="col-2">
                 <i class="icon far fa-user fa-3x"></i>
-                <p>{{r.reviewerName}}</p>
+                <p>{{r.name_display}}</p>
               </div>
               <div class="col-8">
-                <i class="fas fa-star icon"></i>
-                <i class="fas fa-star icon"></i>
-                <i class="fas fa-star icon"></i>
-                <i class="fas fa-star icon"></i>
-                <i class="fas fa-star icon"></i>
-                <p id="topOfReview">Overall: 5 | Food: 5 | Service: 5 | Ambience: 5 | Value: 5 | Noise: Quiet</p>
-                <p>The food was fantastic as always and amazing service with a friendly staff who are always happy to help with suggestions and changes if needed.</p>
+                <!--<span v-for="star in parseInt(r.rating_overall)"><i class="fas fa-star icon"></i></span>-->
+                <p id="topOfReview">Overall: {{r.rating_overall}} | Food: {{r.rating_food}} | Service: {{r.rating_service}} | Ambience: {{r.rating_ambience}} | Value: {{r.rating_value}} | Noise: {{r.noise}}</p>
+                <p>{{r.description}}</p>
                 <hr>
               </div>
               <div class="col-2">
@@ -135,6 +129,28 @@
               </div>
             </div>
 
+          <div id="insertReview" class="col-12">
+            <h4> Leave a review </h4>
+            <textarea placeholder="Review description" name="description" style="min-width: 90%"></textarea>
+            <p> 
+            Overall: <input type="number" name="overall" min="1" max="5" value="5">
+            Food: <input type="number" name="overall" min="1" max="5" value="5">
+            Service: <input type="number" name="overall" min="1" max="5" value="5">
+            Ambience: <input type="number" name="overall" min="1" max="5" value="5">
+            Value: <input type="number" name="overall" min="1" max="5" value="5">
+            Noise: <select class='input' id="noise_rating">
+                <option value="Quiet">Quiet</option>
+                <option value="Moderate" selected="selected">Moderate</option>
+                <option value="Loud">Loud</option>
+              </select>
+            </p>
+            <div class="row mx-auto pt-2 pb-2">
+              <input type="text" placeholder="Your Name" name="description" style="min-width: 20%"></textarea>
+            </div>
+            <div class="row mx-auto">
+              <button onclick="submitReview()" class="btn btn-info">Submit</button>
+            </div>
+          </div>
           </div>
         </div>
 
@@ -184,10 +200,8 @@
           </div>
             <button id="buttonConfirmBooking" class="btn btn-info" data-toggle="modal" data-target="#modalConfirmBooking" onclick="confirmBookingDetails()">Confirm your Reservation</button>
         </div>
-          <button id="buttonConfirmBooking" class="btn btn-info" data-toggle="modal" data-target="#modalConfirmBooking" onclick="confirmBookingDetails()">Confirm your Reservation</button>
       </div>
     </div>
-  </div>
 
     <!-- Modal to search for a booking -->
     <div class="modal fade" id="searchBooking">
@@ -218,7 +232,6 @@
         </div>
       </div>
     </div>
-  </div>
 
     <!-- Modal to confirm booking -->
     <div class="modal fade" id="modalConfirmBooking">
@@ -262,7 +275,6 @@
         </div>
       </div>
     </div>
-  </div>
 
     <!-- Modal to state the booking is successful -->
     <div class="modal fade" id="confirmBookingTwo">
@@ -445,7 +457,6 @@
       </div>
     </div>
   </div>
-  </div>
   
   <!-- Modal for settings -->
   <div class="modal fade" id="settingsModal" role="dialog">
@@ -493,7 +504,6 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-success">Update</button>
         </div>
-      </div>
       </div>
     </div>
   </div>

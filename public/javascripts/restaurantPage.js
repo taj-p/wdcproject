@@ -67,57 +67,90 @@ $("#mapButton").click(function() {
         'slow');
 });
 
+function submitReview() {
+  var reviewDiv = document.getElementById("insertReview");
+  const description = reviewDiv.getElementsByTagName("TEXTAREA")[0].value;
+  const noiseRating = document.getElementById("noise_rating").value;
+  console.log(description);
+
+  const ratings = reviewDiv.getElementsByTagName("INPUT");
+
+  var url = new URL(window.location.href);
+  const RESTAURANTID = url.searchParams.get("restaurantid");
+
+  var post_body = {
+                      restaurant_id:   RESTAURANTID,
+                      description:     description,
+                      noise:           noiseRating,
+                      rating_overall:  ratings[0].value,
+                      rating_food:     ratings[1].value,
+                      rating_service:  ratings[2].value,
+                      rating_ambience: ratings[3].value,
+                      rating_value:    ratings[4].value,
+                      name_display:    ratings[5].value,
+                    };
+  console.log(post_body);
+
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.open("POST", "/users/addUserReview", true);
+  xhttp.setRequestHeader('Content-Type', 'application/json');
+  xhttp.send(JSON.stringify(post_body));
+}
+
 // To do, automate overallNegRating
-var restaurantPageInfo = new Vue({
-  el: '#restaurantDetails',
-  data: {
-    name: "Parisi's",
-    address: 'Goodwood, Adelaide',
-    overallPosRating: 4,
-    overallNegRating: 1,
-    nReviews: 200,
-    cuisine: 'Italian',
-    // Update guestSelected when user enters webpage
-    guestsSelected: '1',
-    // dateSelected: '',
-    // timeSelected: '',
-    cost: "$$$",
-    photos: [
-      "/images/restaurantPage/1",
-      "/images/restaurantPage/2",
-      "/images/restaurantPage/3",
-      "/images/restaurantPage/4",
-      "/images/restaurantPage/5",
-      "/images/restaurantPage/6",
-      "/images/restaurantPage/7"
-    ],
-    about:  'Parisi’s Hyde Park is a modern Italian restaurant that we and the rest of Adelaide can’t get enough of. Right on King William Road, ' + 
-            'Parisi’s Hyde Park is run by a family with hospitality running through their veins hence you can rest assured of nothing but absolute quality. ' +
-            'It’s a simple yet stylish space boasting a menu that’s brimming with everything from refined antipasti to pasta, traditional mains and pizzas ' +
-            'that are either classic or gourmet and a little more experimental. Whatever you’re in the mood for, Parisi’s Hyde Park means some of the best ' +
-            'Italian fare in this part of Adelaide and we’re sure you’re going to love it.',
-    menu: '',
-    reviews: [  
-      {reviewerName: "Kate", id: 1, overallPosRating: 5, noiseRating: 2, foodRating: 5, serviceRating: 5, ambienceRating: 4, valueRating: 5, comment: "The food was fantastic as always and amazing service with a friendly staff who are always happy to help with suggestions and changes if needed."},
-      {reviewerName: "Tomoko", id: 2, overallPosRating: 5, noiseRating: 2, foodRating: 5, serviceRating: 5, ambienceRating: 4, valueRating: 5, comment: "It was an amazing experience to have such delicious dishes and nice service! Lam shake was fantastic , so does pasta!! Deserts are also fantastic and presentation was also beautiful!!"},
-      {reviewerName: "Rebecca", id: 3, overallPosRating: 5, noiseRating: 2, foodRating: 5, serviceRating: 5, ambienceRating: 4, valueRating: 5, comment: "Always a fantastic dinner experience at Parisis. Great service, delicious food, beautiful atmosphere. It’s our favourite place to take family and friends for a guaranteed perfect evening"},
-      {reviewerName: "Charles", id: 4, overallPosRating: 5, noiseRating: 2, foodRating: 5, serviceRating: 5, ambienceRating: 4, valueRating: 5, comment: "The food is great and filling. The service from the staff is warm and friendly. I will pass on the recommendation to friends of mine."},
-      {reviewerName: "Susan", id: 5, overallPosRating: 5, noiseRating: 2, foodRating: 5, serviceRating: 5, ambienceRating: 4, valueRating: 5, comment: "Enjoyed a very pleasant dinner with a friend on a quiet tuesday evening The food was excellent- Baramundi for me and a calamari salad for my friend . Friendly and efficient service."}
-    ]
-  }
-});
+//var restaurantPageInfo = new Vue({
+//  el: '#restaurantDetails',
+//  data: {
+//    name: "Parisi's",
+//    address: 'Goodwood, Adelaide',
+//    overallPosRating: 4,
+//    overallNegRating: 1,
+//    nReviews: 200,
+//    cuisine: 'Italian',
+//    // Update guestSelected when user enters webpage
+//    guestsSelected: '1',
+//    dateSelected: '',
+//    timeSelected: '',
+//    cost: "$$$",
+//    photos: [
+//      "/images/restaurantPage/1",
+//      "/images/restaurantPage/2",
+//      "/images/restaurantPage/3",
+//      "/images/restaurantPage/4",
+//      "/images/restaurantPage/5",
+//      "/images/restaurantPage/6",
+//      "/images/restaurantPage/7"
+//    ],
+//    about:  'Parisi’s Hyde Park is a modern Italian restaurant that we and the rest of Adelaide can’t get enough of. Right on King William Road, ' +
+//            'Parisi’s Hyde Park is run by a family with hospitality running through their veins hence you can rest assured of nothing but absolute quality. ' +
+//            'It’s a simple yet stylish space boasting a menu that’s brimming with everything from refined antipasti to pasta, traditional mains and pizzas ' +
+//            'that are either classic or gourmet and a little more experimental. Whatever you’re in the mood for, Parisi’s Hyde Park means some of the best ' +
+//            'Italian fare in this part of Adelaide and we’re sure you’re going to love it.',
+//    menu: ''
+//    },
+//  computed: {
+//    reviews: function() {
+//      return setTimeout(function() { return reviews; }, 2000);
+//    }
+//  }
+//});
 
 // Populates the DOM HTML with the selected restaurant data (from server)
 function populateDomElements(RESTAURANTDATA) {
-  // document.getElementById("breadcrumbName").innerHTML = RESTAURANTDATA.name;
-  // document.getElementById("restaurantName").innerHTML = RESTAURANTDATA.name;
-  // document.getElementById("nameCB").innerHTML = RESTAURANTDATA.name;
-  // document.getElementById("location").innerHTML = RESTAURANTDATA.address;
-  // document.getElementById("aboutInfo").innerHTML = RESTAURANTDATA.about;
-  document.getElementById("menuInfo").innerHTML = RESTAURANTDATA.menu;
+  document.getElementById("breadcrumbName").innerHTML = RESTAURANTDATA.name;
+  document.getElementById("restaurantName").innerHTML = RESTAURANTDATA.name;
+  document.getElementById("nameCB").innerHTML = RESTAURANTDATA.name;
+  document.getElementById("aboutInfo").innerHTML = RESTAURANTDATA.description;
+  document.getElementById("menuInfo").innerHTML = "Menu data";
+
+
+
+  var address = JSON.parse(RESTAURANTDATA.address);
+  document.getElementById("location").innerHTML = address.Street + ', ' + address.Suburb;
 
   for (var i = RESTAURANTDATA.images.length - 1; i >= 0; i--) {
-    imageURL = RESTAURANTDATA.images[i];
+    var imageURL = RESTAURANTDATA.images[i];
     var bigImageSection = document.getElementById("bigImageSection");
     var gridImageSection = document.getElementById("gridImageSection");
 
@@ -152,27 +185,16 @@ function populateDomElements(RESTAURANTDATA) {
 
   // rating, reviews, cuisine and cost info at top of page
   var cost = "";
-  for (var j = 0; j < RESTAURANTDATA.cost; j++) cost += "$";
+  for (var j = 0; j < 2; j++) cost += "$";
 
   var rating = "";
-  for (var i = 0; i < RESTAURANTDATA.rating; i++) rating += "<i class=\"far fa-star\"></i>";
+  for (var i = 0; i < RESTAURANTDATA.overall_rating; i++) rating += "<i class=\"far fa-star\"></i>";
 
-  var numberOfReviews = RESTAURANTDATA.numberOfReviews;
-  var cuisine = RESTAURANTDATA.cuisine;
+  var numberOfReviews = RESTAURANTDATA.review_count;
+  var cuisine = Object.keys(JSON.parse(RESTAURANTDATA.cuisine))[0];
 
   document.getElementById("topInfo").innerHTML = rating + " | " + numberOfReviews + " reviews | " + cuisine + " | " + cost;
 }
-
-// var topInfo = new Vue({
-//   el: "#topInfo",
-//   data: {
-//     numberOfReviews: 200,
-//     cuisine: "Italian",
-//     cost: "$",
-//     rating: 5
-//   }
-
-// });
 
 function populateFields() {
 
@@ -180,7 +202,31 @@ function populateFields() {
 
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 & this.status == 200) {
-      const RESTAURANTDATA = JSON.parse(this.responseText);
+      RESTAURANTDATA = JSON.parse(this.responseText);
+      populateImages();
+    }
+  };
+
+  var url = new URL(window.location.href);
+  const RESTAURANTID = url.searchParams.get("restaurantid");
+
+  var restaurantSelection = URI('/restaurantPage.json');
+  var query = restaurantSelection.query(true);
+  query.restaurant_id = RESTAURANTID;
+  restaurantSelection.query(query);
+
+  xhttp.open("GET", restaurantSelection, true);
+  xhttp.send();
+}
+
+function populateImages() {
+
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 & this.status == 200) {
+      RESTAURANTDATA.images = JSON.parse(this.responseText);
+      console.log(RESTAURANTDATA);
       populateDomElements(RESTAURANTDATA);
     }
   };
@@ -188,14 +234,38 @@ function populateFields() {
   var url = new URL(window.location.href);
   const RESTAURANTID = url.searchParams.get("restaurantid");
 
-  var restaurantSelection = URI('/restaurantSelection.txt');
+  var restaurantSelection = URI('/restImg.json');
   var query = restaurantSelection.query(true);
-  query.restaurantid = RESTAURANTID;
+  query.restaurant_id = RESTAURANTID;
   restaurantSelection.query(query);
 
   xhttp.open("GET", restaurantSelection, true);
   xhttp.send();
 }
+
+var reviews = [];
+function getReviews() {
+
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 & this.status == 200) {
+      reviews = JSON.parse(this.responseText);
+    }
+  };
+
+  var url = new URL(window.location.href);
+  const RESTAURANTID = url.searchParams.get("restaurantid");
+
+  var restaurantSelection = URI('/restReviews.json');
+  var query = restaurantSelection.query(true);
+  query.restaurant_id = RESTAURANTID;
+  restaurantSelection.query(query);
+
+  xhttp.open("GET", restaurantSelection, true);
+  xhttp.send();
+}
+getReviews();
 
 // Slideshow functions
 var slideIndex = 1;

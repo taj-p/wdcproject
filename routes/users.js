@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment');
+var uuid = require('uuid');
 
 router.use(function(req, res, next) {
 	if (req.session.user === true) {
@@ -26,7 +27,7 @@ router.post('/updatePassword', function(req, res, next) {
 			throw err;
 		}
 
-		var query = "UPDATE account SET password_hash=SHA2(?,256) WHERE account_id=?;";	
+		var query = "UPDATE account SET password_hash=SHA2(?,256) WHERE account_id=?;";
 		connection.query(query, [req.body.pass, req.session.userid], function(err, rows, fields) {
 			connection.release();
 			res.send();
@@ -42,7 +43,7 @@ router.post('/updateEmail', function(req, res, next) {
 			throw err;
 		}
 
-		var query = "UPDATE account SET email=? WHERE account_id=?;";	
+		var query = "UPDATE account SET email=? WHERE account_id=?;";
 		connection.query(query, [req.body.email, req.session.userid], function(err, rows, fields) {
 			connection.release();
 			res.send();
@@ -58,7 +59,7 @@ router.post('/deleteAccount', function(req, res, next) {
 			throw err;
 		}
 
-		var query = "DELETE FROM account WHERE account_id=?;";	
+		var query = "DELETE FROM account WHERE account_id=?;";
 		connection.query(query, [req.session.userid], function(err, rows, fields) {
 			connection.release();
 			res.send();
@@ -70,15 +71,15 @@ router.post('/deleteAccount', function(req, res, next) {
  RESTAURANT GUEST REGISTERED USERS
  */
 // Get user's upcoming reservations
-// Possible queries: history (value true), upcoming (value true). 
+// Possible queries: history (value true), upcoming (value true).
 //   Eg. /userReservations.json?history=true
 // Request: depends on query. If no query, send empty request body
 // If history/upcoming: send JSON object with
 //   date in format "YYYY-MM-DD", or JSON {year (int), month (indexed at 0, e.g. Jan = 0), day}
 //   time in format JSON {hour, minute}
 // Response: array of json object that contains
-// guest_id, account_id, name_first, name_last, phone_number, booking_id, restaurant_id, guest_id, 
-// start_time, date, guest_number, additional_info 
+// guest_id, account_id, name_first, name_last, phone_number, booking_id, restaurant_id, guest_id,
+// start_time, date, guest_number, additional_info
 router.get('/userReservations.json', function (req, res, next) {
 	if (req.session.manager === true) {
 		res.sendStatus(403);
@@ -144,7 +145,7 @@ router.post('/updateUserReservation', function (req, res, next) {
 		// Update booking info (date, time, pax, additional info)
 		var date = moment(req.body.date).format("YYYY-MM-DD");
     	var time = moment(req.body.time).format("kk:mm:ss");
-		var query = "UPDATE booking SET start_time=? AND date=? AND guest_number=? " + 
+		var query = "UPDATE booking SET start_time=? AND date=? AND guest_number=? " +
 			"additional_info=? WHERE booking_id=? AND account_id=? AND DATE >= NOW();";
 		var inserts = [time, date, req.body.pax, req.body.additional_info,
 			req.body.booking_id, req.session.userid];
@@ -154,7 +155,7 @@ router.post('/updateUserReservation', function (req, res, next) {
 				res.send();
 			}
 			connection.release();
-			
+
 			// Update guest info (name, phone)
 			req.pool.getConnection(function(err, connection) {
 				if (err) {
@@ -163,7 +164,7 @@ router.post('/updateUserReservation', function (req, res, next) {
 				}
 
 				var query = "UPDATE guest INNER JOIN booking ON guest.guest_id=booking.guest_id "+
-					"SET guest.name_first=? AND guest.name_last=? AND guest.phone_number=? " + 
+					"SET guest.name_first=? AND guest.name_last=? AND guest.phone_number=? " +
 					"WHERE booking.booking_id=? AND guest.account_id=?;";
 				var inserts = [req.body.name_first, req.body.name_last, req.body.phone_number,
 					req.body.booking_id, req.session.userid];
@@ -249,7 +250,7 @@ router.post('/updateUserReview', function (req, res, next) {
 		}
 
 		var query = "UPDATE review SET name_display=?, description=?, noise=?, rating_overall=?, " +
-			"rating_value=?, rating_service=?, rating_food=?, rating_ambience=? " + 
+			"rating_value=?, rating_service=?, rating_food=?, rating_ambience=? " +
 			"WHERE account_id=? AND review_id=?;";
 		var inserts = [req.body.name_display, req.body.description, req.body.noise,
 			req.body.rating_overall, req.body.rating_value, req.body.rating_service,
@@ -275,9 +276,11 @@ router.post('/updateUserReview', function (req, res, next) {
 // showing user a list of restaurants they've been to through GET /userReservations.json so users
 // can only review retaurants they've been to
 router.post('/addUserReview', function (req, res, next) {
+  console.log('into review');
 	if (req.session.manager === true) {
 		res.sendStatus(403);
 	}
+  console.log('1');
 
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -287,9 +290,9 @@ router.post('/addUserReview', function (req, res, next) {
 
 		var newReviewID = uuid.v4();
 		var query = "INSERT INTO review (review_id, restaurant_id, account_id, name_display, " +
-			"description, noise, rating_overall, rating_value, rating_service, rating_food, " + 
+			"description, noise, rating_overall, rating_value, rating_service, rating_food, " +
 			"rating_ambience) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-		var inserts = [newReviewID, req.body. restaurant_id, req.session.userid,
+		var inserts = [newReviewID, req.body.restaurant_id, req.session.userid,
 			req.body.name_display, req.body.description, req.body.noise,
 			req.body.rating_overall, req.body.rating_value, req.body.rating_service,
 			req.body.rating_food, req.body.rating_ambience, req.session.userid, req.body.review_id];
@@ -349,7 +352,7 @@ router.get('/manager.json', function(req, res, next) {
 
 			var manageraccount = req.session.userid;
 			var query = "SELECT restaurant_id, name " +
-				"FROM restaurant WHERE account_id=?;";	
+				"FROM restaurant WHERE account_id=?;";
 			connection.query(query, [manageraccount], function(err, rows, fields) {
 				connection.release();
 				res.json(rows);
@@ -374,7 +377,7 @@ router.get('/restInfo.json', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -382,7 +385,7 @@ router.get('/restInfo.json', function(req, res, next) {
 			res.send();
 		}
 
-		var query = "SELECT * FROM restaurant WHERE restaurant_id=? AND account_id=?;";	
+		var query = "SELECT * FROM restaurant WHERE restaurant_id=? AND account_id=?;";
 		connection.query(query, [req.session.restaurantid, req.session.userid], function(err, rows, fields) {
 			if (err) {
 				console.log(err);
@@ -399,7 +402,7 @@ router.post('/addNewRestInfo', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -408,9 +411,9 @@ router.post('/addNewRestInfo', function(req, res, next) {
 		}
 
 		var newRestID = uuid.v4();
-		var query = "INSERT INTO restaurant (restaurant_id, account_id, name, address, " + 
-			"phone, capacity, desciption, cost, cuisine, diet_options) " + 
-			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";	
+		var query = "INSERT INTO restaurant (restaurant_id, account_id, name, address, " +
+			"phone, capacity, desciption, cost, cuisine, diet_options) " +
+			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		connection.query(query, [newRestID, req.session.userid, req.body.name,
 			req.body.address, req.body.phone, req.body.capacity, req.body.desciption, req.body.cost,
 			req.body.cuisine, req.body.diet_options],
@@ -432,7 +435,7 @@ router.post('/updateRestInfo', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -441,7 +444,7 @@ router.post('/updateRestInfo', function(req, res, next) {
 		}
 
 		var query = "UPDATE restaurant SET name=?, address=?, phone=?, capacity=?, desciption=?, "+
-			"cost=?, cuisine=?, diet_options=? WHERE restaurant_id=? AND account_id=?;";	
+			"cost=?, cuisine=?, diet_options=? WHERE restaurant_id=? AND account_id=?;";
 		connection.query(query, [req.body.name, req.body.address, req.body.phone, req.body.capacity,
 			req.body.desciption, req.body.cost, req.body.cuisine, req.body.diet_options,
 			req.session.restaurantid, req.session.userid],
@@ -461,7 +464,7 @@ router.post('/deleteRestInfo', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -469,7 +472,7 @@ router.post('/deleteRestInfo', function(req, res, next) {
 			res.send();
 		}
 
-		var query = "DELETE FROM restaurant WHERE restaurant_id=? AND account_id=?;";	
+		var query = "DELETE FROM restaurant WHERE restaurant_id=? AND account_id=?;";
 		connection.query(query, [req.session.restaurantid, req.session.userid],
 			function(err, rows, fields) {
 				if (err) {
@@ -489,7 +492,7 @@ router.get('/restImg.json', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -497,9 +500,9 @@ router.get('/restImg.json', function(req, res, next) {
 			res.send();
 		}
 
-		var query = "SELECT img_url FROM rest_img_url INNER JOIN restaurant "+ 
-		"ON rest_img_url.restaurant_id=restaurant.restaurant_id " + 
-		"WHERE rest_img_url.restaurant_id=? AND restaurant.account_id=? AND rest_img_url.is_menu=false;";	
+		var query = "SELECT img_url FROM rest_img_url INNER JOIN restaurant "+
+		"ON rest_img_url.restaurant_id=restaurant.restaurant_id " +
+		"WHERE rest_img_url.restaurant_id=? AND restaurant.account_id=? AND rest_img_url.is_menu=false;";
 		connection.query(query, [imgID, req.session.restaurantid, req.session.restaurantid, req.body.url],
 			function(err, rows, fields) {
 				if (err) {
@@ -517,7 +520,7 @@ router.post('/addRestImg', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -526,10 +529,10 @@ router.post('/addRestImg', function(req, res, next) {
 		}
 
 		var imgID = uuid.v4();
-		var query = "INSERT INTO rest_img_url (img_id, restaurant_id, img_url, is_menu) VALUES " + 
-			"(?, (SELECT restaurant.restaurant_id FROM restaurant INNER JOIN account ON " + 
-			"restaurant.account_id = account.account_id WHERE restaurant.restaurant_id=? " + 
-			"AND account.account_id=?), ?, false);";	
+		var query = "INSERT INTO rest_img_url (img_id, restaurant_id, img_url, is_menu) VALUES " +
+			"(?, (SELECT restaurant.restaurant_id FROM restaurant INNER JOIN account ON " +
+			"restaurant.account_id = account.account_id WHERE restaurant.restaurant_id=? " +
+			"AND account.account_id=?), ?, false);";
 		connection.query(query, [imgID, req.session.restaurantid, req.session.userid, req.body.url],
 			function(err, rows, fields) {
 				if (err) {
@@ -547,7 +550,7 @@ router.post('/deleteRestImg', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -578,7 +581,7 @@ router.get('/restMenuImg.json', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -586,9 +589,9 @@ router.get('/restMenuImg.json', function(req, res, next) {
 			res.send();
 		}
 
-		var query = "SELECT img_url FROM rest_img_url INNER JOIN restaurant "+ 
-		"ON rest_img_url.restaurant_id=restaurant.restaurant_id " + 
-		"WHERE rest_img_url.restaurant_id=? AND restaurant.account_id=? AND rest_img_url.is_menu=true;";	
+		var query = "SELECT img_url FROM rest_img_url INNER JOIN restaurant "+
+		"ON rest_img_url.restaurant_id=restaurant.restaurant_id " +
+		"WHERE rest_img_url.restaurant_id=? AND restaurant.account_id=? AND rest_img_url.is_menu=true;";
 		connection.query(query, [imgID, req.session.restaurantid, req.session.restaurantid, req.body.url],
 			function(err, rows, fields) {
 				if (err) {
@@ -607,7 +610,7 @@ router.post('/addRestMenuImg', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -616,11 +619,11 @@ router.post('/addRestMenuImg', function(req, res, next) {
 		}
 
 		var imgID = uuid.v4();
-		// var query = "INSERT INTO rest_img_url (img_id, restaurant_id, img_url, is_menu) VALUES " + 
-		// 	"(?, ?, ?, true);";	
+		// var query = "INSERT INTO rest_img_url (img_id, restaurant_id, img_url, is_menu) VALUES " +
+		// 	"(?, ?, ?, true);";
 		var query = "INSERT INTO rest_img_url (img_id, restaurant_id, img_url, is_menu) VALUES " +
-			"(?,(SELECT restaurant.restaurant_id FROM restaurant INNER JOIN account ON " + 
-			"restaurant.account_id = account.account_id WHERE restaurant.restaurant_id=? " + 
+			"(?,(SELECT restaurant.restaurant_id FROM restaurant INNER JOIN account ON " +
+			"restaurant.account_id = account.account_id WHERE restaurant.restaurant_id=? " +
 			"AND account.account_id=?), ?, true);"
 		connection.query(query, [imgID, req.session.restaurantid, req.session.userid, req.body.url],
 			function(err, rows, fields) {
@@ -640,7 +643,7 @@ router.get('/restOpenings.json', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -648,9 +651,9 @@ router.get('/restOpenings.json', function(req, res, next) {
 			res.send();
 		}
 
-		var query = "SELECT day, start, end FROM rest_open_times INNER JOIN restaurant "+ 
-		"ON rest_open_times.restaurant_id=restaurant.restaurant_id " + 
-		"WHERE rest_open_times.restaurant_id=? AND restaurant.account_id=?;";	
+		var query = "SELECT day, start, end FROM rest_open_times INNER JOIN restaurant "+
+		"ON rest_open_times.restaurant_id=restaurant.restaurant_id " +
+		"WHERE rest_open_times.restaurant_id=? AND restaurant.account_id=?;";
 		connection.query(query, [imgID, req.session.restaurantid, req.session.restaurantid],
 			function(err, rows, fields) {
 				if (err) {
@@ -676,8 +679,8 @@ router.post('/addRestOpenings', function(req, res, next) {
 			res.send();
 		}
 		var query = "INSERT INTO rest_open_times (restaurant_id, day, start, end) VALUES " +
-			"((SELECT restaurant.restaurant_id FROM restaurant INNER JOIN account ON " + 
-			"restaurant.account_id = account.account_id WHERE restaurant.restaurant_id=? " + 
+			"((SELECT restaurant.restaurant_id FROM restaurant INNER JOIN account ON " +
+			"restaurant.account_id = account.account_id WHERE restaurant.restaurant_id=? " +
 			"AND account.account_id=?), ?, ?, ?);";
 		connection.query(query, [imgID, req.session.restaurantid, req.session.userid, req.body.day,
 			req.body.start, req.body.end],
@@ -698,7 +701,7 @@ router.post('/updateRestOpenings', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -706,14 +709,14 @@ router.post('/updateRestOpenings', function(req, res, next) {
 			res.send();
 		}
 
-		var query = "UPDATE rest_open_times " + 
+		var query = "UPDATE rest_open_times " +
 			"INNER JOIN restaurant ON rest_img_url.restaurant_id = restaurant.restaurant_id " +
 			"INNER JOIN account ON restaurant.account_id = account.account_id " +
 			"SET rest_open_times.day=?, rest_open_times.start=?, rest_open_times.end=? "+
 			"WHERE rest_img_url.restaurant_id=? AND restaurant.account_id=? AND rest_open_times.day=? " +
 			"rest_open_times.start=?, rest_open_times.end=?;";
 		connection.query(query, [req.body.day, req.body.start, req.body.end,
-			req.session.restaurantid, req.session.userid, req.body.prev_day, req.body.prev_start, 
+			req.session.restaurantid, req.session.userid, req.body.prev_day, req.body.prev_start,
 			req.body.prev_end],
 			function(err, rows, fields) {
 				if (err) {
@@ -739,12 +742,12 @@ router.post('/deleteRestOpenings', function(req, res, next) {
 			throw err;
 		}
 
-		var query = "DELETE rest_open_times.* FROM rest_open_times " + 
+		var query = "DELETE rest_open_times.* FROM rest_open_times " +
 			"INNER JOIN restaurant ON rest_img_url.restaurant_id = restaurant.restaurant_id " +
 			"INNER JOIN account ON restaurant.account_id = account.account_id " +
 			"WHERE rest_img_url.restaurant_id=? AND restaurant.account_id=? AND rest_open_times.day=? "+
 			"rest_open_times.start=?, rest_open_times.end=?;";
-		connection.query(query, [req.session.restaurantid, req.session.userid, req.body.day, 
+		connection.query(query, [req.session.restaurantid, req.session.userid, req.body.day,
 			req.body.start, req.body.end],
 			function(err, rows, fields) {
 				if (err) {
@@ -818,7 +821,7 @@ router.post('/updateRestBookEst', function(req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
 	}
-	
+
 	// connect to the database
 	req.pool.getConnection(function(err, connection) {
 		if (err) {
@@ -827,9 +830,9 @@ router.post('/updateRestBookEst', function(req, res, next) {
 		}
 
 		var query = "UPDATE rest_booking_est_time SET duration=?, guest_min=?, guest_max=? " +
-			"WHERE restaurant_id=? AND account_id=? AND duration=? AND guest_min=? AND guest_max=?;";	
+			"WHERE restaurant_id=? AND account_id=? AND duration=? AND guest_min=? AND guest_max=?;";
 		connection.query(query, [req.body.duration, req.body.guest_min, req.body.guest_max,
-			req.session.restaurantid, req.session.userid, req.body.prev_duration, 
+			req.session.restaurantid, req.session.userid, req.body.prev_duration,
 			req.body.prev_guest_min, req.body.prev_guest_max],
 			function(err, rows, fields) {
 				if (err) {
@@ -855,7 +858,7 @@ router.post('/deleteRestBookEst', function(req, res, next) {
 			res.send();
 		}
 
-		var query = "DELETE FROM rest_booking_est_time WHERE restaurant_id=? AND account_id=? " + 
+		var query = "DELETE FROM rest_booking_est_time WHERE restaurant_id=? AND account_id=? " +
 			"AND duration=? AND guest_min=? AND guest_max=?;";
 		connection.query(query, [req.session.restaurantid, req.session.userid, req.body.duration,
 			req.body.guest_min, req.body.guest_max],
@@ -873,11 +876,11 @@ router.post('/deleteRestBookEst', function(req, res, next) {
 
 /////// RESTAURANT RESERVATIONS
 // Get restaurant's reservations for the day
-// Request: 
+// Request:
 //   date in format "YYYY-MM-DD", or JSON {year (int), month (indexed at 0, e.g. Jan = 0), day}
 // Response: array of json object that contains
-// guest_id, account_id, name_first, name_last, phone_number, booking_id, restaurant_id, guest_id, 
-// start_time, date, guest_number, additional_info 
+// guest_id, account_id, name_first, name_last, phone_number, booking_id, restaurant_id, guest_id,
+// start_time, date, guest_number, additional_info
 router.get('/restaurantReservations.json', function (req, res, next) {
 	if (req.session.manager != true) {
 		res.sendStatus(403);
@@ -891,7 +894,7 @@ router.get('/restaurantReservations.json', function (req, res, next) {
 
 		var query = "SELECT guest.*, booking.* FROM guest" +
 			"INNER JOIN booking ON guest.guest_id=booking.guest_id " +
-			"INNER JOIN restaurant ON booking.restaurant_id=restaurant.restaurant_id " + 
+			"INNER JOIN restaurant ON booking.restaurant_id=restaurant.restaurant_id " +
 			"WHERE booking.restaurant_id=? AND restaurant.account_id=? ";
 		var inserts = [req.session.restaurantid, req.session.userid];
 
@@ -943,11 +946,11 @@ router.post('/updateUserReservation', function (req, res, next) {
 		// Update booking info (date, time, pax, additional info)
 		var date = moment(req.body.date).format("YYYY-MM-DD");
     	var time = moment(req.body.time).format("kk:mm:ss");
-		// var query = "UPDATE booking SET start_time=? AND date=? AND guest_number=? " + 
+		// var query = "UPDATE booking SET start_time=? AND date=? AND guest_number=? " +
 		// 	"additional_info=? WHERE booking_id=? AND restaurant_id=? AND date >= NOW();";
-		var query = "UPDATE booking " + 
+		var query = "UPDATE booking " +
 			"INNER JOIN restaurant ON restaurant.restaurant_id=booking.restaurant_id "+
-			"SET booking.start_time=? AND booking.date=? AND booking.guest_number=? " + 
+			"SET booking.start_time=? AND booking.date=? AND booking.guest_number=? " +
 			"booking.additional_info=? "+
 			"WHERE booking.booking_id=? AND booking.restaurant_id=? AND restaurant.account_id=? "+
 			"AND booking.date >= NOW();";
@@ -959,7 +962,7 @@ router.post('/updateUserReservation', function (req, res, next) {
 				res.send();
 			}
 			connection.release();
-			
+
 			// Update guest info (name, phone)
 			req.pool.getConnection(function(err, connection) {
 				if (err) {
@@ -1002,7 +1005,7 @@ router.post('/deleteUserReservation', function (req, res, next) {
 		}
 
 		var query = "DELETE booking .* FROM booking "+
-			"INNER JOIN restaurant ON restaurant.restaurant_id=booking.restaurant_id " + 
+			"INNER JOIN restaurant ON restaurant.restaurant_id=booking.restaurant_id " +
 			"WHERE booking.booking_id=? AND booking.restaurant_id=? restaurant.account_id=?;";
 		var inserts = [req.body.booking_id, req.session.restaurantid, req.session.userid];
 		connection.query(query, inserts, function(err, results, fields) {
