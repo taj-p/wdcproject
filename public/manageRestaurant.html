@@ -41,11 +41,12 @@
 				<a class="navbar-brand" href="/">LOGO</a>
 				<div class="dropdown"> <!-- to ensure sign up and sign in links are left aligned -->
 					<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
-						{{ restaurantManagerName }}
+						Account
 					</button>
 					<div class="dropdown-menu">
                         <!-- Settings are currently not implemented -->
                         <!-- <a class="dropdown-item" href="/">Setting</a> -->
+						<a class="dropdown-item" href="manager.html">Manager home page</a>
 						<a class="dropdown-item" href="/">Log out</a>
 					</div>
 					<span class="caret"></span></button>
@@ -56,7 +57,7 @@
 		<!-- breadcrumbs -->
 		<div class="container-fluid breadcrumbs">
 			<div class="container">
-				<p> <a href="/">Home</a> > <i>Restaurant Manager</i> 
+				<p> <a href="/">Home</a> > <a href="manager.html">Manager</a> > <i>{{name}} Manager</i> </p>
 			</div>
 		</div>
 		<!-- nav bar -->

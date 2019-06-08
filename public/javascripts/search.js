@@ -44,7 +44,7 @@ var RestaurantClientResults;
 // returns false if id is in array, else true
 function isUnique(id, array) {
   for (var i = 0; i < array.length; i++) {
-    if (array[i].id == id) return false;
+    if (array[i].restaurant_id === id) return false;
   }
   return true;
 }
@@ -60,14 +60,15 @@ function filterRestaurants() {
   var cuisineResults = [];
   const CUISINEFILTERS = document.getElementById("cuisineFilter").getElementsByTagName("INPUT");
   for (i = 0; i < CUISINEFILTERS.length; i++) {
-    if (CUISINEFILTERS[i].checked == true) cuisineResults = cuisineResults.concat(RestaurantClientResults.filter(object => object.cuisine === CUISINEFILTERS[i].name));
+    if (CUISINEFILTERS[i].checked == true) cuisineResults = cuisineResults.concat(
+      RestaurantClientResults.filter(object => object.cuisine === CUISINEFILTERS[i].name.slice(0, CUISINEFILTERS[i].name.length - 1)));
   }
   RestaurantClientResults = [...cuisineResults];
 
   var dietResults = [];
   const DIETFILTERS = document.getElementById("dietFilter").getElementsByTagName("INPUT");
   for (i = 0; i < DIETFILTERS.length; i++) {
-    if (DIETFILTERS[i].checked == true) dietResults = dietResults.concat(RestaurantClientResults.filter(object => object.dietOptions.indexOf(DIETFILTERS[i].name) > -1 && isUnique(object.id, dietResults)));
+    if (DIETFILTERS[i].checked == true) dietResults = dietResults.concat(RestaurantClientResults.filter(object => object.diet_options.indexOf(DIETFILTERS[i].name) > -1 && isUnique(object.restaurant_id, dietResults)));
   }
   RestaurantClientResults = [...dietResults];
 }
@@ -75,8 +76,8 @@ function filterRestaurants() {
 // sorts the restaurants according to the specified sort option
 function sortRestaurants() {
   const SORTINGOPTION = document.getElementById("sortingMode").value;
-  if (SORTINGOPTION === "Rating (high to low)") RestaurantClientResults.sort((a, b) => (a.rating > b.rating) ? -1 : 1);
-  else if (SORTINGOPTION === "Rating (low to high)") RestaurantClientResults.sort((a, b) => (a.rating > b.rating) ? 1 : -1);
+  if (SORTINGOPTION === "Rating (high to low)") RestaurantClientResults.sort((a, b) => (a.overallRating > b.overallRating) ? -1 : 1);
+  else if (SORTINGOPTION === "Rating (low to high)") RestaurantClientResults.sort((a, b) => (a.overallRating > b.overallRating) ? 1 : -1);
   else if (SORTINGOPTION === "Cost (high to low)") RestaurantClientResults.sort((a, b) => (a.cost > b.cost) ? -1 : 1);
   else if (SORTINGOPTION === "Cost (low to high)") RestaurantClientResults.sort((a, b) => (a.cost > b.cost) ? 1 : -1);
   else if (SORTINGOPTION === "A-Z") RestaurantClientResults.sort((a, b) => (a.name > b.name) ? 1 : -1);
@@ -109,8 +110,36 @@ function getResults() {
     }
   };
 
-  xhttp.open("GET", "/restaurantResults.txt", true);
+  var url = new URL(window.location.href);
+  const pax = url.searchParams.get("numguests");
+  const search = url.searchParams.get("search");
+  const date = url.searchParams.get("date");
+  const time = url.searchParams.get("time");
+
+  var POSTurl = "/restaurantResults.txt?" +
+                "date=" + date + "&" +
+                "time=" + time + "&" +
+                "numguests=" + pax + "&" +
+                "search=" + search;
+
+
+  xhttp.open("GET", POSTurl, true);
   xhttp.send();
+}
+
+// Returns the closest times in the timeArray with time
+function findClosestTimes(time, timeArray) {
+  msTime = +moment(time, 'HH:mm').format('x');
+  msTimeArray = timeArray.map(t => +moment(t.hour + ":" + t.minute, "HH:mm").format('x'));
+
+  for (var i = 0; i < msTimeArray.length; i++) {
+    if (msTimeArray[i] > msTime) break;
+  }
+
+  if (i <= 1) i++;
+  if (i >= msTimeArray.length - 3) i = i - 2;
+
+  return [timeArray[i-1], timeArray[i], timeArray[i+1]];
 }
 
 // creates a restaurant result div for Restaurant
@@ -124,7 +153,7 @@ function createRestaurantResultDiv(Restaurant) {
   var img = document.createElement("IMG");
   img.className = "resultsImage img-fluid w-100";
   img.alt = Restaurant.name + "restaurant image";
-  img.src = "images/restaurants/" + String(Restaurant.id) + ".jpg";
+  img.src = Restaurant.img_url;
   imageDiv.appendChild(img);
   restaurantResultDiv.appendChild(imageDiv);
 
@@ -134,14 +163,15 @@ function createRestaurantResultDiv(Restaurant) {
     // adding name of restaurant
   var name = document.createElement("DIV");
   name.className = "float-left";
-  name.innerHTML = "<p>" + Restaurant.name + " - <i>" + Restaurant.cuisine + "</i></p>";
+  var cuisine = Restaurant.cuisine;
+  name.innerHTML = "<p>" + Restaurant.name + " - <i>" + cuisine + "</i></p>";
   restaurantInfo.appendChild(name);
 
     // adding rating (in number of stars) and cost (in number of '$')
   var ratingAndCost = document.createElement("P");
   ratingAndCost.className = "text-right";
   var rating = "";
-  for (var i = 0; i < Restaurant.rating; i++) rating += "<i class=\"far fa-star\"></i>";
+  for (var i = 0; i < Restaurant.overallRating; i++) rating += "<i class=\"far fa-star\"></i>";
   var cost = "";
   for (var j = 0; j < Restaurant.cost; j++) cost += "$";
   ratingAndCost.innerHTML = rating + "|" + cost;
@@ -149,7 +179,8 @@ function createRestaurantResultDiv(Restaurant) {
 
     // adding address
   var address = document.createElement("P");
-  address.innerHTML = Restaurant.address;
+  var objAddress = JSON.parse(Restaurant.address);
+  address.innerHTML = objAddress.Suburb;
   restaurantInfo.appendChild(address);
 
     // adding buttons for booking
@@ -160,24 +191,35 @@ function createRestaurantResultDiv(Restaurant) {
   const numGuestsQuery = url.searchParams.get("numguests");
   const searchQuery = url.searchParams.get("search");
   const dateQuery = url.searchParams.get("date");
+  const timeQuery = url.searchParams.get("time");
+
+  var bestAvailableTimes = findClosestTimes(timeQuery, Restaurant.availableTimes);
 
   for (var k = 0; k < 3; k++) {
-    var button = document.createElement("A");
-    button.className = "btn btn-info reservationButtons";
-    button.innerHTML = Restaurant.availableTimes[k];
-    var uri = URI('restaurantPage.html');
-
     // set URL of button to store pertinent booking parameters
+    var uri = URI('restaurantPage.html');
     var query = uri.query(true);
     query.search = searchQuery;
     query.date = dateQuery;
+    var time24 = bestAvailableTimes[k];
+    var hour = time24.hour;
+    var minute = time24.minute;
+
+    var time = moment(query.date + " " + hour + ":" + minute, 'YYYY-MM-DD HH:mm').format('HH:mm');
     query.time = Restaurant.availableTimes[k];
     query.numguests = numGuestsQuery;
-    query.restaurantid = Restaurant.id;
+    query.restaurantid = Restaurant.restaurant_id;
     uri.query(query);
+
+
+    var button = document.createElement("A");
+    button.className = "btn btn-info reservationButtons";
+    button.innerHTML = time;
+
     button.href = uri;
     buttonGroup.appendChild(button);
   }
+
   restaurantInfo.appendChild(buttonGroup);
   restaurantResultDiv.appendChild(restaurantInfo);
 

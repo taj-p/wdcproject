@@ -45,30 +45,66 @@ $(document).on("click", "#manageReservationSelected", function () {
      setDatePicker();
 });
 
+// Name (string), address (string), description (string), cusines (array of string)
+// Cost (string), openings (JSON object with day, and count),
+// reservations(JSON object with date, start/end time, seatsAvailable, newReservation (T/F), name, notes, 
+// people, duration, phone),
+// var restaurantInfo = [
+// 	{name: '', address: '', description: ' ', cuisines: [], cost: '', openings: [], timeSlots: [],
+// 		reservations:[]}
+// ];
+
+function getCuisines() {
+	// Create new AJAX request
+	var xhttp = new XMLHttpRequest();
+
+	// Handle response
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			restaurantInfo.cuisines = JSON.parse(this.responseText);
+		}
+	};
+
+	// Open connection
+	xhttp.open("GET", "/cuisines.txt", true);
+
+	// Send request
+	xhttp.send();
+};
+
+function fillRestaurantInfo() {
+	// Create new AJAX request
+	var xhttp = new XMLHttpRequest();
+
+	// Handle response
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var results = JSON.parse(this.responseText);
+			restaurantInfo.name = results[0].name;
+			// Address
+			var add = JSON.parse(results[0].address);
+			restaurantInfo.address = add.street + ", " + add.suburb + ", " + add.state + ", " +
+				 add.postal_code;
+			restaurantInfo.description = results[0].description;
+			restaurantInfo.cost = results[0].cost;
+			// todo: pre-fill cuisines
+		}
+	};
+
+	// Open connection
+	xhttp.open("GET", "/users/restInfo.json", true);
+
+	// Send request
+	xhttp.send();
+};
+
 var restaurantInfo = new Vue({
 	el: '#restaurantInfo',
 	data: {
-		restaurantManagerName: 'manager name',
 		name: '',
 		address: '',
-		mondayopening: [],
 		description: '',
-		cuisines: [
-        "All cuisines",
-        "Italian",
-        "Mexican",
-        "Japanese",
-        "Steakhouse",
-        "Indian",
-        "Vietnamese",
-        "Australian",
-        "Filipino",
-        "Chinese",
-        "Malay",
-        "Polish",
-        "Pakistani",
-        "Korean"
-		],
+		cuisines: [],
 		cost: '',
 		openings: [
 			{day: "Monday", 	count:1},
@@ -101,5 +137,9 @@ var restaurantInfo = new Vue({
 			{start:"09:30pm", end:"00:30pm",	seatsAvailable:2, newReservation:false,	name: "",	notes: "", people: "", duration:"", phone:""}
 		],
 		stopOnline: false
+	},
+	mounted: function() {
+		getCuisines();
+		fillRestaurantInfo();
 	}
 });
