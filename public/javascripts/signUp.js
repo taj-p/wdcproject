@@ -1,15 +1,3 @@
-function logout()
-{
-	document.getElementById("signUp").style.display = "block"; 
-	document.getElementById("signIn").style.display = "block";
-	document.getElementById("account").style.display = "none";	
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });	
-}
-
-
 // This is called with the results from from FB.getLoginStatus().
 function statusChangeCallback(response) {
 console.log('statusChangeCallback');
