@@ -206,7 +206,7 @@ function createRestaurantResultDiv(Restaurant) {
     var minute = time24.minute;
 
     var time = moment(query.date + " " + hour + ":" + minute, 'YYYY-MM-DD HH:mm').format('HH:mm');
-    query.time = Restaurant.availableTimes[k];
+    query.time = time;
     query.numguests = numGuestsQuery;
     query.restaurantid = Restaurant.restaurant_id;
     uri.query(query);

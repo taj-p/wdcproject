@@ -139,9 +139,10 @@ router.get('/restMenuImg.json', function(req, res, next) {
     }
 
     var query = "SELECT img_url FROM rest_img_url WHERE restaurant_id=? AND is_menu=true;";
-    connection.query(query, [req.body.restaurant_id],
+    connection.query(query, [req.query.restaurant_id],
       function(err, rows, fields) {
         connection.release();
+        console.log(rows);
         res.json(rows);
     });
   });
@@ -444,7 +445,7 @@ function determineAvailability(connection, req, date, time, restaurant_id, pax) 
         res.send();
         throw err;
       }
-      connection.release();
+      if (req.pool._freeConnections.indexOf(connection) == -1) connection.release();
       var bookings = results;
 
       // Initialise array to rest. capacity for each bin
@@ -706,7 +707,11 @@ router.get('/restaurantResults.txt', function(req, res) {
 
     var query = `SELECT restaurant.restaurant_id, name, cuisine, cost, address, diet_options, img_url
                  FROM restaurant, rest_img_url
-                 WHERE restaurant.restaurant_id = rest_img_url.restaurant_id;`;
+                 WHERE restaurant.restaurant_id = rest_img_url.restaurant_id
+                 AND rest_img_url.is_menu = 0;`;
+                 // ***********************************
+                 // **** UNCOMMENT FOR PRODUCTION *****
+                 // ***********************************
                  //AND (name LIKE ? OR JSON_EXTRACT(address, \"$.street\") LIKE ?
                  //OR JSON_EXTRACT(address, \"$.suburb\") LIKE ? OR description LIKE ?)
                  //LIMIT 50;`

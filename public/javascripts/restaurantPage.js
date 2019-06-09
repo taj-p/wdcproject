@@ -93,6 +93,16 @@ function submitReview() {
 
   var xhttp = new XMLHttpRequest();
 
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 & this.status == 200) {
+      document.getElementById("reviews").innerHTML = "";
+      getReviews();
+    }
+    else if (this.readyState == 4 & this.status == 403) {
+      alert("Please log in to leave a review");
+    }
+  };
+
   xhttp.open("POST", "/users/addUserReview", true);
   xhttp.setRequestHeader('Content-Type', 'application/json');
   xhttp.send(JSON.stringify(post_body));
@@ -142,7 +152,7 @@ function populateDomElements(RESTAURANTDATA) {
   document.getElementById("restaurantName").innerHTML = RESTAURANTDATA.name;
   document.getElementById("nameCB").innerHTML = RESTAURANTDATA.name;
   document.getElementById("aboutInfo").innerHTML = RESTAURANTDATA.description;
-  document.getElementById("menuInfo").innerHTML = "Menu data";
+  //document.getElementById("menuInfo").innerHTML = "Menu data";
 
 
 
@@ -150,7 +160,7 @@ function populateDomElements(RESTAURANTDATA) {
   document.getElementById("location").innerHTML = address.Street + ', ' + address.Suburb;
 
   for (var i = RESTAURANTDATA.images.length - 1; i >= 0; i--) {
-    var imageURL = RESTAURANTDATA.images[i];
+    var imageURL = RESTAURANTDATA.images[i].img_url;
     var bigImageSection = document.getElementById("bigImageSection");
     var gridImageSection = document.getElementById("gridImageSection");
 
@@ -159,7 +169,7 @@ function populateDomElements(RESTAURANTDATA) {
     bigImageDiv.className = "slides";
     var bigImageImg = document.createElement("IMG");
     bigImageImg.className = "bigImage";
-    bigImageImg.src = imageURL + ".jpg";
+    bigImageImg.src = imageURL;
     bigImageImg.alt = "picture of restaurant";
     bigImageDiv.appendChild(bigImageImg);
 
@@ -171,7 +181,7 @@ function populateDomElements(RESTAURANTDATA) {
     var gridImageImg = document.createElement("IMG");
     gridImageImg.className = "demo cursor smallImage";
     gridImageImg.alt = "small image of restaurant in grid";
-    gridImageImg.src = imageURL + ".jpg";
+    gridImageImg.src = imageURL;
     gridImageImg.setAttribute("onclick", "currentSlide("+String(i + 1)+")");
     gridImageDiv.appendChild(gridImageImg);
 
@@ -234,7 +244,7 @@ function populateImages() {
   var url = new URL(window.location.href);
   const RESTAURANTID = url.searchParams.get("restaurantid");
 
-  var restaurantSelection = URI('/restImg.json');
+  var restaurantSelection = URI('/restMenuImg.json');
   var query = restaurantSelection.query(true);
   query.restaurant_id = RESTAURANTID;
   restaurantSelection.query(query);
@@ -251,6 +261,7 @@ function getReviews() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 & this.status == 200) {
       reviews = JSON.parse(this.responseText);
+      createReviewElements();
     }
   };
 
@@ -266,6 +277,34 @@ function getReviews() {
   xhttp.send();
 }
 getReviews();
+
+function createReviewElements() {
+  var reviewSection = document.getElementById("reviews");
+
+  for (var i = 0; i < reviews.length; i++) {
+    var reviewDiv = document.createElement("DIV");
+    reviewDiv.innerHTML = `
+            <div class="row">
+              <div id="username" class="col-2">
+                <i class="icon far fa-user fa-3x"></i>
+                <p>` + reviews[i].name_display + `</p>
+              </div>
+              <div class="col-8">
+                <p id="topOfReview">Overall: ` + reviews[i].rating_overall +
+                                    ` | Food: ` + reviews[i].rating_food +
+                                    ` | Service: ` + reviews[i].rating_service +
+                                    ` | Ambience: ` + reviews[i].rating_ambience +
+                                    ` | Value: ` + reviews[i].rating_value +
+                                    ` | Noise: ` + reviews[i].noise +
+               `</p>
+                <p> ` + reviews[i].description  + `</p>
+                <hr>
+              </div>
+            </div>
+      `
+    reviewSection.appendChild(reviewDiv);
+  }
+}
 
 // Slideshow functions
 var slideIndex = 1;
@@ -303,5 +342,8 @@ function confirmBookingDetails() {
 
   var time = document.getElementById("timePicker").value;
   document.getElementById("timeCB").innerHTML = " " + time;
+
+  var people = document.getElementById("peopleSelector").value;
+  document.getElementById("guestsCB").innerHTML = " " + people + " people";
 }
 
