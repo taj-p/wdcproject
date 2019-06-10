@@ -1,3 +1,165 @@
+// Log In Functions //////////////////////////////////////////////////////////////
+function login() {
+  // Create new AJAX request
+  var xhttp = new XMLHttpRequest();
+
+  // Handle response
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      alert("Success");
+
+	    document.getElementById("signUp").style.display = "none";
+	    document.getElementById("signIn").style.display = "none";
+	    $('#signInModal').modal('hide');
+	    document.getElementById("account").style.display = "block";
+      document.getElementById("email-setting").innerHTML = "<b>Email: </b>"+document.getElementById('email-signIn').value;
+
+    } else if (this.readyState == 4 && this.status == 403){
+      alert("E-mail / password incorrect");
+    }
+  };
+
+  // Open connection
+  xhttp.open("POST", "/login", true);
+
+  // Send request
+  // Set content type to JSON
+  xhttp.setRequestHeader("Content-type", "application/json");
+
+  xhttp.send(
+    JSON.stringify({
+      email: document.getElementById('email-signIn').value,
+      pass: document.getElementById('psw-signIn').value
+    })
+  );
+};
+
+function signUp() {
+  // Check if password matches
+  var email = document.getElementById('email-signUp').value;
+  var pass = document.getElementById('psw-signUp').value;
+  var pass_repeated = document.getElementById('psw-signUp-repeat').value;
+  var account_selected= document.querySelectorAll('input[name="account-type"]:checked').length;
+
+  if ((email != '') && (pass != '') && (pass_repeated != '') && (account_selected > 0)) {
+    if (pass != pass_repeated) {
+      alert("Passwords don't match");
+    } else {
+      alert("Success!");
+      var is_manager = false;
+      if (document.querySelector('input[name="account-type"]:checked').value === "manager") {
+        is_manager = true;
+      }
+
+      // Create new AJAX request
+      var xhttp = new XMLHttpRequest();
+
+      // Handle response
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          alert("Success");
+        }
+      };
+
+      // Open connection
+      xhttp.open("POST", "/signUp", true);
+
+      // Set content type to JSON
+      xhttp.setRequestHeader("Content-type", "application/json");
+
+      // Send request
+      xhttp.send(JSON.stringify({ email: email, pass: pass, manager: is_manager }));
+    }
+  }
+};
+
+var google_user;
+// To retrieve profile information for a user, use the getBasicProfile() method.
+function onSignIn(googleUser) {
+    google_user = googleUser;
+    var profile = googleUser.getBasicProfile();
+    document.getElementById("signUp").style.display = "none";
+    document.getElementById("signIn").style.display = "none";
+    $('#signInModal').modal('hide');
+    document.getElementById("account").style.display = "block";
+    document.getElementById("email-setting").innerHTML = "<b>Email: </b>"+ profile.getEmail();
+}
+
+function logout()
+{
+    document.getElementById("signUp").style.display = "block";
+    document.getElementById("signIn").style.display = "block";
+    document.getElementById("account").style.display = "none";
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+}
+
+function settings() {
+  // Create new AJAX request
+  var xhttp = new XMLHttpRequest();
+
+  // Handle response
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+    alert("Success");
+    document.getElementById("setEmail").style.display = "none";
+    document.getElementById("setPsw").style.display = "none";
+    }
+  };
+
+  // Open connection
+  xhttp.open("POST", "/settings", true);
+
+  // Send request
+  // Set content type to JSON
+  xhttp.setRequestHeader("Content-type", "application/json");
+
+  xhttp.send(
+    JSON.stringify({
+      email: document.getElementById('change-email-signIn').value,
+      pass: document.getElementById('newPsw').value
+    })
+  );
+};
+
+// Calendar /////////////////////////////////////////////////////////////////////
+
+function addToCalendar() {
+  const people = document.getElementById("peopleSelector").value;
+  const date = document.getElementById("datePicker").value;
+  const time = document.getElementById("timePicker").value;
+  const restaurant = document.getElementById("restaurantName").innerHTML;
+  const restaurant_address = document.getElementById("location").innerHTML;
+
+  var event = {
+    'summary': 'Reservation at ' + restaurant,
+    'location': restaurant_address,
+    'description': 'Your booking was made from Table4u',
+    'start': {
+      'dateTime': date + 'T09' + time,
+      'timeZone': 'GMT+09:30'
+    },
+    'end': {
+      'dateTime': moment(date + " " + time, 'YYYY-MM-DD HH:mm').add(1, "hour").format('YYYY-MM-DD HH:mm'),
+      'timeZone': 'GMT+09:30'
+    },
+    'recurrence': [
+      'RRULE:FREQ=DAILY;COUNT=2'
+    ]
+  };
+
+  var request = gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'resource': event
+  });
+
+  request.execute(function(event) {
+    appendPre('Event created: ' + event.htmlLink);
+  });
+}
+
 // Search bar /////////////////////////////////////////////////////////////////////
 var moment = rome.moment; // moment handles all time objects
 

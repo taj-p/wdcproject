@@ -5,10 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Restaurant search service">
   <meta name="author" content="Taj Pereira">
+  <meta name="google-signin-client_id" content="179118281029-2o2h1vnkb8a65a0ncf7afndtrgu7hd5v.apps.googleusercontent.com">
   <title>Restaurant4u Search Page</title>
   <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
   <link rel="stylesheet" href="stylesheets/search.css">
   <link rel="stylesheet" href="stylesheets/navigationBar.css">
+
+  <!-- load the Google platform library -->
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
   <!-- jquery CDN -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
@@ -45,15 +50,15 @@
         <div class="collapse navbar-collapse" id="navbarToggleItems">
         <a class="nav-item nav-link" id="signUp" href="#" data-toggle="modal" data-target="#signUpModal">Sign up</a>
         <a class="nav-item nav-link" id="signIn" href="#" data-toggle="modal" data-target="#signInModal">Sign in</a>
-  	    <a class="nav-item nav-link active" id="manageBooking" href="#" onclick="$('#bookingModal').modal('show');">Manage Bookings</a>
-        <div class="dropdown"><a class="nav-link dropdown-toggle" id="account" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-item nav-link active" id="manageBooking" href="#" onclick="$('#bookingModal').modal('show');">Manage Bookings</a>
+        <div class="dropdown"><a class="nav-link dropdown-toggle" id="account" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:none">
           Account
         </a>
         <div class="dropdown-menu">
           <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bookingHistory">Booking History</a>
           <a class="dropdown-item" href="manager.html">Manage Restaurant</a>
           <a class="dropdown-item" data-toggle="modal" href="#settingsModal">Settings</a>
-          <a class="dropdown-item" href="#">Log out</a>
+          <a class="dropdown-item" href="#" onclick="logout()">Log out</a>
         </div>
         </div>
       </div>
@@ -267,42 +272,42 @@
   <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+        <!-- Header -->
         <div class="modal-header">
           <h5 class="modal-title" id="signUpModalTitle">Sign Up</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+  
+        <!-- Body -->
         <div class="modal-body">
-          <label for="fname"><b>First Name</b></label>
-          <input id="fname" type="text" class="fname" placeholder="First Name*" name="fname" required>
-          <label for="lname"><b>Last Name</b></label>
-          <input id="lname" type="text" class="lname" placeholder="Last Name*" name="lname" required>
-  
-          <label for="email"><b>Email</b></label>
-          <input id="email" type="text" class="email" placeholder="Email*" name="email" required>
-          <label for="phone"><b>Phone Number (optional)</b></label>
-          <input id="phone" type="text" class="phone" placeholder="Phone Number" name="phone">
-  
-          <label for="psw"><b>Password</b></label>
-          <input id="psw" type="password" class="psw" placeholder="Password*" name="psw" required>
-          <label for="psw-repeat"><b>Repeat Password</b></label>
-          <input id="psw-repeat" type="password" class="psw-repeat" placeholder="Repeat Password" name="psw-repeat" required>
-  
-  
           <form>
-          <input type="radio" name="user" value="user" checked>User
-          <br />
-          <input type="radio" name="user" value="manager">Restaurant Manager
+            <label for="email"><b>Email</b></label>
+            <input id="email-signUp" type="text" class="email" placeholder="Email*" name="email" required>
+  
+            <label for="psw"><b>Password</b></label>
+            <input id="psw-signUp" type="password" class="psw" placeholder="Password*" name="psw" required>
+  
+            <label for="psw-signUp-repeat"><b>Repeat Password</b></label>
+            <input id="psw-signUp-repeat" type="password" class="psw-repeat" placeholder="Repeat Password" name="psw-repeat" required>
+  
+            <input type="radio" name="account-type" value="user" required /> User 
+            <br />
+            <input type="radio" name="account-type" value="manager" required /> Restaurant Manager
+  
+            <br />
+  
+            <p>Already have an account? <a href="#signInModal" data-toggle="modal"  data-dismiss="modal" >Sign in>></a></p>
+            
+            <br />
+  
+            <!-- Footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" onclick="signUp()">Sign up</button>
+            </div>
           </form>
-  
-          <br />
-  
-          <p>Already have an account? <a href="#signInModal" data-toggle="modal"  data-dismiss="modal" >Sign in>></a></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Sign up</button>
         </div>
       </div>
     </div>
@@ -330,15 +335,15 @@
           <p style="text-align:center;">Or login via... </p>
   
           <div class="socialSignin">
-            <button type="button" class="facebook"><i class="fa fa-facebook fa-fw"></i><b>Login with Facebook</b></button>
-            <button type="button" class="google"><i class="fa fa-google fa-fw"></i><b>Login with Google+</b></button>
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <fb:login-button scope="public_profile,email" id="fbLogin" onlogin="checkLoginState();"></fb:login-button>
           </div>
           <p><a href="#signUpModal" data-toggle="modal"  data-dismiss="modal">Sign up now>></a></p>
         </div>
   
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Sign in</button>
+          <button type="button" class="btn btn-primary" onclick="login();">Sign in</button>
         </div>
       </div>
     </div>
@@ -401,16 +406,7 @@
         <div class="modal-body">
   
           <div>
-            <label for="fname"><b>Name: </b>Yuxiao Liu</label>
-            <a class="edit" href="#" onclick="changeName()">Edit</a>
-          </div>
-          <div id="setName" style="display: none">
-          <input id="Changefname" type="text" class="fname" placeholder="First Name" name="fname">
-          <input id="Changelname" type="text" class="lname" placeholder="Last Name" name="lname">
-          </div>
-  
-          <div>
-          <label for="email-signIn"><b>Email: </b>example@gmail.com</label>
+          <label for="email-signIn" id="email-setting"></label>
           <a class="edit" href="#" onclick="changeEmail()">Edit</a>
           </div>
           <div id="setEmail" style="display: none">
@@ -418,7 +414,7 @@
           </div>
   
           <div>
-          <label for="psw-signIn"><b>Password: </b>********</label>
+          <label for="psw-signIn"><b>Password: </b>******</label>
           <a class="edit" href="#" onclick="changePsw()">Edit</a>
           </div>
           <div id="setPsw" style="display: none">
@@ -431,7 +427,7 @@
   
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-success">Update</button>
+          <button type="button" class="btn btn-success" onclick="settings()">Update</button>
         </div>
       </div>
       </div>
