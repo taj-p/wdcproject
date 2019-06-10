@@ -70,6 +70,46 @@ router.post('/login', function(req, res, next) {
   });
 });
 
+// Add a restaurant booking - it recieve a JSON object in request, containing duration,
+// min guests, and max guest
+router.get('/addBooking', function(req, res, next) {
+	// connect to the database
+	req.pool.getConnection(function(err, connection) {
+		if (err) {
+			throw err;
+			res.send();
+		}
+
+    const booking_id = uuid.v4();
+    const guest_id = uuid.v4();
+
+    new Promise((resolve) => {
+      var query = `INSERT INTO guest
+                   VALUES(?, ?, ?, ?, ?)`
+		  connection.query(query, [guest_id, null, req.query.name_first, req.query.name_last, req.query.phone_number],
+		  	function(err, rows, fields) {
+		  		if (err) {
+		  			console.log(err);
+		  		}
+          resolve();
+		  });
+    }).then(() => {
+		  var query = `INSERT INTO booking
+		  	           VALUES (?, ?, ?, ?, ?, ?, ?);`;
+		  connection.query(query, [booking_id, req.query.restaurant_id, guest_id, req.query.time,
+		  	req.query.date, req.query.numguests, req.query.additionalinformation],
+		  	function(err, rows, fields) {
+		  		if (err) {
+		  			console.log(err);
+		  			res.send();
+		  		}
+		      connection.release();
+		  		res.send(booking_id);
+		  });
+    });
+
+	});
+});
 
 // Sign up
 router.post('/signup', function(req, res, next) {

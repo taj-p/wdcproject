@@ -94,6 +94,7 @@ router.get('/userReservations.json', function (req, res, next) {
 		var query = "SELECT * FROM guest INNER JOIN booking ON guest.guest_id = booking.guest_id " +
 			"WHERE guest.account_id=? ";
 		var inserts = [req.session.userid];
+    console.log(req.session.userid);
 
 		var subqueries = "";
 		if (Object.keys(req.query).length > 0) {
@@ -121,6 +122,7 @@ router.get('/userReservations.json', function (req, res, next) {
 				console.log(err);
 				res.send();
 			}
+
 			connection.release();
 			res.json(results);
 		});
@@ -333,7 +335,6 @@ router.post('/deleteUserReview', function (req, res, next) {
 		});
 	});
 });
-
 
 /*
  MANAGER
@@ -812,6 +813,47 @@ router.post('/addRestBookEst', function(req, res, next) {
 				connection.release();
 				res.send();
 		});
+	});
+});
+
+// Add a restaurant booking - it recieve a JSON object in request, containing duration,
+// min guests, and max guest
+router.get('/addBooking', function(req, res, next) {
+	// connect to the database
+	req.pool.getConnection(function(err, connection) {
+		if (err) {
+			throw err;
+			res.send();
+		}
+
+    const booking_id = uuid.v4();
+    const guest_id = uuid.v4();
+
+    new Promise((resolve) => {
+      var query = `INSERT INTO guest
+                   VALUES(?, ?, ?, ?, ?)`
+		  connection.query(query, [guest_id, req.session.userid, req.query.name_first, req.query.name_last, req.query.phone_number],
+		  	function(err, rows, fields) {
+		  		if (err) {
+		  			console.log(err);
+		  		}
+          resolve();
+		  });
+    }).then(() => {
+		  var query = `INSERT INTO booking
+		  	           VALUES (?, ?, ?, ?, ?, ?, ?);`;
+		  connection.query(query, [booking_id, req.query.restaurant_id, guest_id, req.query.time,
+		  	req.query.date, req.query.numguests, req.query.additionalinformation],
+		  	function(err, rows, fields) {
+		  		if (err) {
+		  			console.log(err);
+		  			res.send();
+		  		}
+		      connection.release();
+		  		res.send(booking_id);
+		  });
+    });
+
 	});
 });
 

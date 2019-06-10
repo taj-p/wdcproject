@@ -67,6 +67,7 @@ $("#mapButton").click(function() {
         'slow');
 });
 
+// Submits a review to the server and reloads the review section
 function submitReview() {
   var reviewDiv = document.getElementById("insertReview");
   const description = reviewDiv.getElementsByTagName("TEXTAREA")[0].value;
@@ -108,43 +109,54 @@ function submitReview() {
   xhttp.send(JSON.stringify(post_body));
 }
 
-// To do, automate overallNegRating
-//var restaurantPageInfo = new Vue({
-//  el: '#restaurantDetails',
-//  data: {
-//    name: "Parisi's",
-//    address: 'Goodwood, Adelaide',
-//    overallPosRating: 4,
-//    overallNegRating: 1,
-//    nReviews: 200,
-//    cuisine: 'Italian',
-//    // Update guestSelected when user enters webpage
-//    guestsSelected: '1',
-//    dateSelected: '',
-//    timeSelected: '',
-//    cost: "$$$",
-//    photos: [
-//      "/images/restaurantPage/1",
-//      "/images/restaurantPage/2",
-//      "/images/restaurantPage/3",
-//      "/images/restaurantPage/4",
-//      "/images/restaurantPage/5",
-//      "/images/restaurantPage/6",
-//      "/images/restaurantPage/7"
-//    ],
-//    about:  'Parisi’s Hyde Park is a modern Italian restaurant that we and the rest of Adelaide can’t get enough of. Right on King William Road, ' +
-//            'Parisi’s Hyde Park is run by a family with hospitality running through their veins hence you can rest assured of nothing but absolute quality. ' +
-//            'It’s a simple yet stylish space boasting a menu that’s brimming with everything from refined antipasti to pasta, traditional mains and pizzas ' +
-//            'that are either classic or gourmet and a little more experimental. Whatever you’re in the mood for, Parisi’s Hyde Park means some of the best ' +
-//            'Italian fare in this part of Adelaide and we’re sure you’re going to love it.',
-//    menu: ''
-//    },
-//  computed: {
-//    reviews: function() {
-//      return setTimeout(function() { return reviews; }, 2000);
-//    }
-//  }
-//});
+var isLoggedIn = false;
+function confirmReservation() {
+  if (isLoggedIn) {
+    document.getElementById("removeIfLoggedIn").style.display = 'none';
+  }
+  else {
+    reserveWithoutAccount();
+  }
+}
+
+// sends the reservation details to the server and returns a booking ID.
+function reserveWithoutAccount() {
+  var url = new URL(window.location.href);
+  const restaurantid = url.searchParams.get("restaurantid");
+  const date = document.getElementById("datePicker").value;
+  const time = document.getElementById("timePicker").value;
+  const people = document.getElementById("peopleSelector").value;
+  const phone = document.getElementById("phonenumber").value;
+  const email = document.getElementById("email").value;
+  const firstName = document.getElementById("firstname").value;
+  const lastName = document.getElementById("lastname").value;
+  const additionalInformation = document.getElementById("additionalInformation").value;
+
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 & this.status == 200) {
+      console.log(this.responseText);
+      document.getElementById("bookingid").innerHTML = this.responseText;
+      document.getElementById("insertEmail").innerHTML = email;
+    }
+  };
+
+  var bookingInfo = URI('/addBooking');
+  var query = bookingInfo.query(true);
+  query.restaurant_id = restaurantid;
+  query.date = date;
+  query.time = time;
+  query.name_first= firstName;
+  query.name_last= lastName;
+  query.phone_number = phone;
+  query.numguests = people;
+  query.additionalInformation = additionalInformation;
+  bookingInfo.query(query);
+
+  xhttp.open("GET", bookingInfo, true);
+  xhttp.send();
+}
 
 // Populates the DOM HTML with the selected restaurant data (from server)
 function populateDomElements(RESTAURANTDATA) {
@@ -334,9 +346,6 @@ function showSlides(n) {
 }
 
 function confirmBookingDetails() {
-  // var people = document.getElementById("peopleSelector").value;
-  // document.getElementById("guestsCB").innerHTML = " " + people + " people";
-
   var date = document.getElementById("datePicker").value;
   document.getElementById("dateCB").innerHTML = " " + date;
 
