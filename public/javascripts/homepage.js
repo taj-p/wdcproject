@@ -93,10 +93,12 @@ function signUp() {
 
 // To retrieve profile information for a user, use the getBasicProfile() method.
 function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
     document.getElementById("signUp").style.display = "none"; 
     document.getElementById("signIn").style.display = "none";
     $('#signInModal').modal('hide');
     document.getElementById("account").style.display = "block";
+    document.getElementById("email-setting").innerHTML = "<b>Email: </b>"+ profile.getEmail();
 }
 
 
