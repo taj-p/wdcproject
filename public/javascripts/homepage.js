@@ -122,6 +122,8 @@ function settings() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
     alert("Success");
+    document.getElementById("setEmail").style.display = "none";
+    document.getElementById("setPsw").style.display = "none";
     }
   };
 
