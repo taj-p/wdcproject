@@ -94,6 +94,11 @@
 							<label for="name">Restaurant Name: </label>
 							<input id="name" type="text" class="form-control" v-model="name" placeholder="Enter restaurant name" />
 						</div>
+						<!-- Phone -->
+						<div class="form-group">
+							<label for="phone">Phone number: </label> <br/>
+							<input id="phone" type="text" class="form-control" v-model="phone" placeholder="Enter restaurant's phone number" />
+						</div>
 						<!-- Address -->
 						<div class="form-group">
 							<label for="address">Address: </label> <br/>
@@ -151,6 +156,15 @@
 							    </option>
 							</select>
 						</div>
+
+						<!-- Diet options -->
+						<div class="form-group">
+							<p>Select diet types:</p>
+						    <label class="checkbox-inline" v-for="d in dietList">
+						    	<input type="checkbox" :value="d" :checked="selectDietContains(d.toLowerCase())" style="margin: 10px 0px 15px 10px;"/> {{d}} 
+						    </label>
+						</div>
+						
 						<!-- Restaurant Cost -->
 						<div class="form-group">
 							<p>Cost:</p>
