@@ -36,6 +36,7 @@
 	<script src="javascripts/bootstrap.min.js" defer></script>
 	<script src="javascripts/search.js" defer></script>
 	<script src="javascripts/manager.js" defer></script>
+	<script src="javascripts/navigationBar.js" defer></script>
 
 </head>
 <body onload="fillManagerPage()">
@@ -49,7 +50,7 @@
 						Manage account
 					</button>
 					<div class="dropdown-menu">
-						<a class="dropdown-item" href="/">Log out</a>
+						<a class="dropdown-item" href="/" onclick="logout()">Log out</a>
 					</div>
 					<span class="caret"></span></button>
 				</div>

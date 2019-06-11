@@ -91,13 +91,30 @@ function onSignIn(googleUser) {
 
 function logout()
 {
-    document.getElementById("signUp").style.display = "block";
-    document.getElementById("signIn").style.display = "block";
-    document.getElementById("account").style.display = "none";
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
+    // Create new AJAX request
+    var xhttp = new XMLHttpRequest();
+
+    // Handle response
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+      alert("Success");
+      document.getElementById("signUp").style.display = "block";
+      document.getElementById("signIn").style.display = "block";
+      document.getElementById("account").style.display = "none";
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+      document.getElementById("setEmail").style.display = "none";
+      document.getElementById("setPsw").style.display = "none";
+      }
+    };
+
+    // Open connection
+    xhttp.open("POST", "/logout", true);
+
+    // Send empty request
+    xhttp.send();
 }
 
 function settings() {
