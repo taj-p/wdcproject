@@ -66,49 +66,47 @@ router.post('/login', function(req, res, next) {
         res.sendStatus(403);
         return;
       }
-    })
+    });
   });
 });
 
 // Add a restaurant booking - it recieve a JSON object in request, containing duration,
 // min guests, and max guest
 router.get('/addBooking', function(req, res, next) {
-	// connect to the database
-	req.pool.getConnection(function(err, connection) {
-		if (err) {
-			throw err;
-			res.send();
-		}
+  // connect to the database
+  req.pool.getConnection(function(err, connection) {
+    if (err) {
+      throw err;
+    }
 
     const booking_id = uuid.v4();
     const guest_id = uuid.v4();
 
     new Promise((resolve) => {
       var query = `INSERT INTO guest
-                   VALUES(?, ?, ?, ?, ?)`
-		  connection.query(query, [guest_id, null, req.query.name_first, req.query.name_last, req.query.phone_number],
-		  	function(err, rows, fields) {
-		  		if (err) {
-		  			console.log(err);
-		  		}
+                   VALUES(?, ?, ?, ?, ?)`;
+      connection.query(query, [guest_id, null, req.query.name_first, req.query.name_last, req.query.phone_number],
+        function(err, rows, fields) {
+          if (err) {
+            throw err;
+          }
           resolve();
-		  });
+      });
     }).then(() => {
-		  var query = `INSERT INTO booking
-		  	           VALUES (?, ?, ?, ?, ?, ?, ?);`;
-		  connection.query(query, [booking_id, req.query.restaurant_id, guest_id, req.query.time,
-		  	req.query.date, req.query.numguests, req.query.additionalinformation],
-		  	function(err, rows, fields) {
-		  		if (err) {
-		  			console.log(err);
-		  			res.send();
-		  		}
-		      connection.release();
-		  		res.send(booking_id);
-		  });
+      var query = `INSERT INTO booking
+                   VALUES (?, ?, ?, ?, ?, ?, ?);`;
+      connection.query(query, [booking_id, req.query.restaurant_id, guest_id, req.query.time,
+        req.query.date, req.query.numguests, req.query.additionalinformation],
+        function(err, rows, fields) {
+          if (err) {
+            res.send();
+          }
+          connection.release();
+          res.send(booking_id);
+      });
     });
 
-	});
+  });
 });
 
 // Sign up
@@ -373,7 +371,7 @@ router.get('/restaurant.json', function(req, res, next) {
       var search_condition = "";
       if (query_length >= 0) {
         search_condition += "WHERE " + query_string[0];
-        for (var i=1; i < query_length; i++) {
+        for (i=1; i < query_length; i++) {
           search_condition = search_condition + "AND " + query_string[i];
         }
       }
@@ -421,20 +419,6 @@ router.get('/restaurantPage.json', function(req, res, next) {
       throw err;
     }
 
-      //var availability_promises = [];
-      //var overall_ratings_promises = [];
-      //for (var i = 0; i < rows.length; i++) {
-      //  var time = moment(req.query.date + " " + req.query.time, 'YYYY-MM-DD HH:mm');
-      //  availability_promises.push(determineAvailability(connection, req, time.format("YYYY-MM-DD"), time.format("kk:mm:ss"), rows[i].restaurant_id, req.query.numguests));
-      //  overall_ratings_promises.push(determineOverallRating(connection, rows[i].restaurant_id));
-      //}
-
-      //Promise.all(availability_promises)
-      //  .then((availabilities) => {
-      //    for (i = 0; i < rows.length; i++) {
-      //      rows[i].availableTimes = availabilities[i];
-      //    }
-
     var result_promises = [];
     result_promises.push(new Promise((resolve, reject) => {
         var query = "SELECT restaurant_id, name, address, phone, description, cost, cuisine, " +
@@ -455,7 +439,6 @@ router.get('/restaurantPage.json', function(req, res, next) {
       .then((results) => {
         final_result = results[0];
         final_result.overall_rating = results[1];
-        console.log(final_result);
         res.send(final_result);
       });
   });
@@ -534,7 +517,7 @@ function determineAvailability(connection, req, date, time, restaurant_id, pax) 
               var mom_begin = moment(available_begin, "kk:mm:ss");
               var mom_end = moment(available_end, "kk:mm:ss");
 
-              for (var i=0; i < bookings.length; i++) {
+              for (i=0; i < bookings.length; i++) {
 
                 var mom_start = moment(bookings[i].start_time, "kk:mm:ss");
 
@@ -548,17 +531,16 @@ function determineAvailability(connection, req, date, time, restaurant_id, pax) 
               }
 
               // return array of times where available_seats >= pax
-              var available_times = []
-              for (var i=0; i < available_seats.length; i++) {
+              var available_times = [];
+              for (i=0; i < available_seats.length; i++) {
                 var to_add = mom_begin.clone();
                 to_add.add(30*i, 'minutes');
-                var add_obj = {hour: to_add.toObject().hours,minute: to_add.toObject().minutes}
+                var add_obj = {hour: to_add.toObject().hours,minute: to_add.toObject().minutes};
                 if (available_seats[i] >= pax) {
                   available_times.push(add_obj);
                 }
               }
-              availability = available_times;
-              resolve(availability);
+              resolve(available_times);
             });
           });
         });
@@ -581,7 +563,7 @@ router.post('/availability.json', function(req, res, next) {
     }
     determineAvailability(connection, req, moment(req.body.date).format("YYYY-MM-DD"),
                           moment(req.body.time).format("kk:mm:ss"), req.body.restaurant_id, req.body.pax)
-      .then(function(result) {res.send(availability);});
+      .then(function(result) {res.send(result);});
     connection.release();
   });
 });
@@ -683,32 +665,6 @@ function Restaurant(id, name, cuisine, rating, cost, address, availableTimes, di
   this.images = images;
 }
 
-/* Artificial database results for a restaurant search */
-const RESTAURANTRESULTS = [new Restaurant(1, "Parisi's", "Italian", 5, 3, "Goodwood, Adelaide", ["6:00pm", "6:30pm", "7:00pm"], ["Vegan", "Vegetarian", "Gluten free"], "ABOUT PARISIS", "MENU", 200, ["5", "4", "3"], ["/images/restaurantPage/1", "/images/restaurantPage/2","/images/restaurantPage/3","/images/restaurantPage/4", "/images/restaurantPage/5","/images/restaurantPage/6"]),
-
-                           new Restaurant(2, "50SixOne", "Dessert", 4, 2, "Goodwood, Adelaide", ["6:00pm", "6:30pm", "7:30pm"], ["Vegan", "Vegetarian", "Gluten free"], "ABOUT PARISIS", "MENU", 220, ["5", "4", "3"], ["/images/restaurantPage/1", "/images/restaurantPage/2","/images/restaurantPage/3","/images/restaurantPage/4", "/images/restaurantPage/5","/images/restaurantPage/6"]),
-
-                           new Restaurant(3, "Vino's", "Italian", 2, 1, "Goodwood, Adelaide", ["6:30pm", "7:00pm", "7:30pm"], ["Vegan", "Vegetarian", "Gluten free"], "ABOUT PARISIS", "MENU", 300, ["5", "4", "3"], ["/images/restaurantPage/1", "/images/restaurantPage/2","/images/restaurantPage/3","/images/restaurantPage/4", "/images/restaurantPage/5","/images/restaurantPage/6"]),
-
-                           new Restaurant(4, "Farina", "Italian", 2, 1, "Goodwood, Adelaide", ["6:30pm", "7:00pm", "7:30pm"], ["Gluten free"], "ABOUT PARISIS", "MENU", 250, ["5", "4", "3"], ["/images/restaurantPage/1", "/images/restaurantPage/2","/images/restaurantPage/3","/images/restaurantPage/4", "/images/restaurantPage/5","/images/restaurantPage/6"]),
-
-                           new Restaurant(5, "Lil'NNQ", "Vietnamese", 2, 1, "Goodwood, Adelaide", ["6:30pm", "7:00pm", "7:30pm"], ["Vegetarian", "Gluten free"], "ABOUT PARISIS", "MENU", 250, ["5", "4", "3"], ["/images/restaurantPage/1", "/images/restaurantPage/2","/images/restaurantPage/3","/images/restaurantPage/4", "/images/restaurantPage/5","/images/restaurantPage/6"])];
-
-/* Review objects to simulate fetches from the database */
-function Review(id, noiseRating, overallRating, foodRating, serviceRating, ambienceRating, valueRating, comment) {
-    this.id = id;
-    this.noiseRating = noiseRating;
-    this.overallRating = overallRating;
-    this.foodRating = foodRating;
-    this.serviceRating = serviceRating;
-    this.ambienceRating = ambienceRating;
-    this.valueRating = valueRating;
-    this.comment = comment;
-}
-
-/* Artificial restaurant reviews for an arbitrary restaurant */
-const RESTAURANTREVIEWS = [new Review(1, "Moderate", "5", "5", "5", "4", "4", "This is a review of the restaurant"), new Review(2, "Quiet", "4", "5", "4", "4", "4", "this is another review of the restaurant")];
-
 // Determines the overall rating of the given restaurant_id
 function determineOverallRating(connection, restaurant_id) {
   return new Promise((resolve, reject) => {
@@ -719,7 +675,6 @@ function determineOverallRating(connection, restaurant_id) {
     var overallRating = 5;
     connection.query(query, [restaurant_id], function(err, rows, fields){
       if (err) {
-        res.send(400);
         throw err;
       }
 

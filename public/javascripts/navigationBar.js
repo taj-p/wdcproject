@@ -32,7 +32,7 @@ function login() {
       pass: document.getElementById('psw-signIn').value
     })
   );
-};
+}
 
 function signUp() {
   // Check if password matches
@@ -71,7 +71,7 @@ function signUp() {
       xhttp.send(JSON.stringify({ email: email, pass: pass, manager: is_manager }));
     }
   }
-};
+}
 
 var google_user;
 // To retrieve profile information for a user, use the getBasicProfile() method.
@@ -122,7 +122,7 @@ function settings() {
       pass: document.getElementById('newPsw').value
     })
   );
-};
+}
 
 // Search bar /////////////////////////////////////////////////////////////////////
 var moment = rome.moment; // moment handles all time objects
@@ -132,7 +132,7 @@ function getInitialTime() {
   var url = new URL(window.location.href);
   const timeQuery = url.searchParams.get("time");
   const dateQuery = url.searchParams.get("date");
-  if (timeQuery == null || dateQuery == null) return nearestHalfHour;
+  if (timeQuery === null || dateQuery == null) return nearestHalfHour;
   else return moment(dateQuery + " " + timeQuery, 'YYYY-MM-DD HH:mm').format('HH:mm');
 }
 
@@ -141,7 +141,7 @@ function getInitialDate() {
   var url = new URL(window.location.href);
   const timeQuery = url.searchParams.get("time");
   const dateQuery = url.searchParams.get("date");
-  if (timeQuery == null || dateQuery == null) return moment().format('YYYY-MM-DD');
+  if (timeQuery === null || dateQuery == null) return moment().format('YYYY-MM-DD');
   else return moment(dateQuery + " " + timeQuery, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
 }
 
@@ -180,7 +180,7 @@ datePickerObj.on('data', (newDate) => {
 function setInitialNumGuests() {
   var url = new URL(window.location.href);
   const numGuestsQuery = url.searchParams.get("numguests");
-  if (numGuestsQuery == null) return;
+  if (numGuestsQuery === null) return;
   else document.getElementById("peopleSelector").value = numGuestsQuery;
 }
 setInitialNumGuests();
@@ -189,9 +189,9 @@ setInitialNumGuests();
 function setInitialSearchQuery() {
   var url = new URL(window.location.href);
   const searchQuery = url.searchParams.get("search");
-  if (searchQuery == null) return;
+  if (searchQuery === null) return;
   var searchQueryBox = document.getElementById("searchQuery");
-  if (searchQueryBox == null) return;
+  if (searchQueryBox === null) return;
   else document.getElementById("searchQuery").value = searchQuery;
 }
 setInitialSearchQuery();
@@ -256,38 +256,3 @@ var bookingInfo = new Vue({
     ]
   }
 });
-
-//var bookings = [];
-//function populateBookings() {
-//  var xhttp = new XMLHttpRequest();
-//
-//  xhttp.onreadystatechange = function() {
-//    if (this.readyState == 4 & this.status == 200) {
-//      bookings = JSON.parse(this.responseText);
-//      createBookings();
-//    }
-//  };
-//
-//  xhttp.open("GET", 'users/userReservations.json', true);
-//  xhttp.send();
-//}
-//
-//function createBookings() {
-//  var bookingsInfo = document.getElementById("bookingsInfo");
-//  for (var i = 0; i < bookings.length(); i++) {
-//    var newBooking = document.createElement("DIV");
-//    newBooking.innerHTML = `
-//      <div class="row">
-//        <div class="col-4">
-//          <img class="smallImage" v-bind:src="b.url" alt="restaurant image">
-//        </div>
-//        <div class="col-8">
-//          <h5>{{b.name}}</h5>
-//          <p> {{b.date}} | {{b.time}} | {{b.guests}} guests</p>
-//          <button class="btn btn-sm btn-danger">Remove</button>
-//        <hr/>
-//        </div>
-//      </div>
-//    `
-//  }
-//}

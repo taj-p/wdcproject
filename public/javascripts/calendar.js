@@ -1,5 +1,4 @@
 function onSuccess(googleUser) {
-  console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
   handleClientLoad();
 }
 
@@ -66,8 +65,6 @@ function addToCalendar() {
   const restaurant = document.getElementById("restaurantName").innerHTML;
   const restaurant_address = document.getElementById("location").innerHTML;
 
-  console.log(restaurant);
-
   var event = {
     'summary': 'Reservation at ' + restaurant,
     'location': restaurant_address,
@@ -95,7 +92,6 @@ function addToCalendar() {
   });
 
   request.execute(function(event) {
-    console.log('Event created: ' + event.htmlLink);
     var calendarLink = document.getElementById("calendarLink");
     calendarLink.href = event.htmlLink;
     $('#calendarSuccessModal').modal('show');

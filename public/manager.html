@@ -51,7 +51,7 @@
 					<div class="dropdown-menu">
 						<a class="dropdown-item" href="/">Log out</a>
 					</div>
-					<span class="caret"></span></button>
+					<span class="caret"></span>
 				</div>
 			</div>
 		</nav>
@@ -67,7 +67,9 @@
 		<br />
 		<div v-if="validUser" class="container-fluid">
 			<h3>The restaurants you manage:</h3>
-			<li v-for="r in restaurants"><a href="manageRestaurant.html" v-on:click="selectRestaurant(r)">{{r.name}}</a></li>
+      <ul>
+			  <li v-for="r in restaurants"><a href="manageRestaurant.html" v-on:click="selectRestaurant(r)">{{r.name}}</a></li>
+      </ul>
 		</div>
 		<div v-else class="container-fluid">
 			<h1>Forbidden</h1>
