@@ -40,7 +40,7 @@
 			<div class="container"> <!-- to keep nav items from hugging borders in large viewports -->
 				<a class="navbar-brand" href="/">Odyssey Eats</a>
 				<div class="dropdown"> <!-- to ensure sign up and sign in links are left aligned -->
-					<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+					<button v-if="validUser" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
 						Account
 					</button>
 					<div class="dropdown-menu">
@@ -60,8 +60,11 @@
 				<p> <a href="/">Home</a> > <a href="manager.html">Manager</a> > <i>{{name}} Manager</i> </p>
 			</div>
 		</div>
-		<!-- nav bar -->
+		
 		<br />
+
+		<div v-if="validUser">
+		<!-- nav bar -->
 		<div class="container col-md-10 col-xs-12 col-sm-12">
 			<nav class="navbar navbar-expand-md navbar-light bg-light">
 				<!-- set button style -->
@@ -161,6 +164,7 @@
 				<button class="btn btn-primary btn-lg">Done</button>
 			</div>
 		</div>
+
 
 		<!-- Manage Restaurant -->
 		<div v-else-if="manageReservation" class="container-fluid">
@@ -430,6 +434,11 @@
 				</div>
 			</div>
 		</div>
+		</div>
+		<div v-else class="container-fluid">
+			<h1>Forbidden</h1>
+			<p>You don't have access to this page.</p>
+		</div>
 	</div>
 
 	
@@ -443,6 +452,6 @@
 	<script src='javascripts/rome.min.js'></script> <!-- date and time picker -->
 	<script src="javascripts/bootstrap.min.js"></script>
 	<script src="javascripts/search.js"></script>
-	<script src="javascripts/owner.js"></script>
+	<script src="javascripts/manageRestaurant.js"></script>
 </body>
 </html>
