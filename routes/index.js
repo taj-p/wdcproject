@@ -61,7 +61,11 @@ router.post('/login', function(req, res, next) {
         req.session.user = true;
         req.session.userid = rows[0].account_id;
         req.session.manager = rows[0].is_manager;
-        res.send();
+        if (req.session.manager == true) {
+          res.send('manager');
+        } else {
+          res.send();
+        }
       } else {
         res.sendStatus(403);
         return;

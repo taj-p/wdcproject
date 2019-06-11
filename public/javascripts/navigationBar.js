@@ -12,6 +12,12 @@ function login() {
 	    $('#signInModal').modal('hide');
 	    document.getElementById("account").style.display = "block";
       document.getElementById("email-setting").innerHTML = "<b>Email: </b>"+document.getElementById('email-signIn').value;
+      if (xhttp.responseText === "manager") {
+        document.getElementById("manage-restaurant-option").style.display = "block";
+      } else {
+        document.getElementById("manage-restaurant-option").style.display = "none";
+      }
+
     } else if (this.readyState == 4 && this.status == 403){
       alert("E-mail / password incorrect");
     }
