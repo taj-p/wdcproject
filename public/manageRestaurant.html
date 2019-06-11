@@ -97,7 +97,13 @@
 						<!-- Address -->
 						<div class="form-group">
 							<label for="address">Address: </label> <br/>
-							<input id="address" type="text" class="form-control" v-model="address" placeholder="Enter restaurant's address" />
+							<input id="address" type="text" class="form-control" v-model="address" placeholder="Enter restaurant's street" />
+							<label for="suburb">Suburb: </label>
+							<input id="suburb" type="text" class="form-control" v-model="suburb" placeholder="Enter restaurant's suburb" />
+							<label for="state">State: </label>
+							<input id="state" type="text" class="form-control" v-model="state" placeholder="Enter restaurant's state" />
+							<label for="postal-code">Postal Code: </label>
+							<input id="postal-code" type="text" class="form-control" v-model="postal_code" placeholder="Enter restaurant's postal code" />
 						</div>
 						<!-- Restaurant Images -->
 						<div class="form-group">
@@ -138,23 +144,29 @@
 						<!-- Cuisine types -->
 						<div class="form-group">
 							<label for="cuisine">Select cuisine:</label>
-							<select class="form-control" id="cuisine">
-								<option v-for="c in cuisines">{{ c }}</option>
+							<select class="form-control" v-model="selectedCuisine">
+							    <option v-for="c in cuisineList" :selected="c == selectedCuisine"
+							        :value="c">
+							        {{c}}
+							    </option>
 							</select>
 						</div>
 						<!-- Restaurant Cost -->
 						<div class="form-group">
 							<p>Cost:</p>
 							<label class="radio-inline">
-								<input type="radio" name="optradio" v-model="cost" value="$"/> $ (< $20/person)
+								<input type="radio" name="optradio" v-model="cost" value="$" 
+									:selected="cost == initialCost"/> $ (< $20/person)
 							</label>
 							<label class="radio-inline">
-								<input type="radio" name="optradio" v-model="cost" value="$$"/> $$ (< $50/person)
+								<input type="radio" name="optradio" v-model="cost" value="$$"
+									:selected="cost == initialCost"/> $$ (< $50/person)
 							</label>
 							<label class="radio-inline">
-								<input type="radio" name="optradio" v-model="cost" value="$$$"/> $$$ (> $50/person)
+								<input type="radio" name="optradio" v-model="cost" value="$$$"
+									:selected="cost == initialCost"/> $$$ (> $50/person)
 							</label>
-						</div>
+ 						</div>
 			  		</div>
 				</div>
 			</form>
