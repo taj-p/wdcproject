@@ -339,6 +339,7 @@ router.post('/deleteUserReview', function (req, res, next) {
 // GET request of manager - parameter : account id
 router.get('/manager.json', function(req, res, next) {
 	if (req.session.manager != true) {
+		console.log("Error: not manager");
 		res.sendStatus(403);
 	} else {
 		// connect to the database
