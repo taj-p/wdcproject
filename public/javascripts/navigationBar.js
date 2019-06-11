@@ -124,42 +124,6 @@ function settings() {
   );
 };
 
-// Calendar /////////////////////////////////////////////////////////////////////
-
-function addToCalendar() {
-  const people = document.getElementById("peopleSelector").value;
-  const date = document.getElementById("datePicker").value;
-  const time = document.getElementById("timePicker").value;
-  const restaurant = document.getElementById("restaurantName").innerHTML;
-  const restaurant_address = document.getElementById("location").innerHTML;
-
-  var event = {
-    'summary': 'Reservation at ' + restaurant,
-    'location': restaurant_address,
-    'description': 'Your booking was made from Table4u',
-    'start': {
-      'dateTime': date + 'T09' + time,
-      'timeZone': 'GMT+09:30'
-    },
-    'end': {
-      'dateTime': moment(date + " " + time, 'YYYY-MM-DD HH:mm').add(1, "hour").format('YYYY-MM-DD HH:mm'),
-      'timeZone': 'GMT+09:30'
-    },
-    'recurrence': [
-      'RRULE:FREQ=DAILY;COUNT=2'
-    ]
-  };
-
-  var request = gapi.client.calendar.events.insert({
-    'calendarId': 'primary',
-    'resource': event
-  });
-
-  request.execute(function(event) {
-    appendPre('Event created: ' + event.htmlLink);
-  });
-}
-
 // Search bar /////////////////////////////////////////////////////////////////////
 var moment = rome.moment; // moment handles all time objects
 

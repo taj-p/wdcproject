@@ -16,6 +16,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
   <!-- load the Google platform library -->
+  <script src="javascripts/calendar.js"></script>
   <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 
@@ -277,7 +278,7 @@
         </div>
         <!-- Body -->
         <div class="modal-body">
-          <p id="confirmedBookingMessage">We've reserved your table for you.<br><br>Your booking id is: <span id="bookingid"></span><br><br>A confirmation email has been sent to <i><span id="insertEmail"></span></i><br><br>To manage your current bookings, click <a id="goManageBookings" href="#" data-toggle="modal" data-target="#bookingModal">here</a><br><br>To add this booking to your Google Calendar, click <a href="#">here</a></p>
+          <p id="confirmedBookingMessage">We've reserved your table for you.<br><br>Your booking id is: <span id="bookingid"></span><br><br>A confirmation email has been sent to <i><span id="insertEmail"></span></i><br><br>To manage your current bookings, click <a id="goManageBookings" href="#" data-toggle="modal" data-target="#bookingModal">here</a><br><br>To add this booking to your Google Calendar, click <a href="#" onclick="addToCalendar();">here</a></p>
         </div>
       </div>
     </div>
@@ -388,34 +389,10 @@
           <p style="text-align:center;">Or login via... </p>
   
           <div class="socialSignin">
-
-
- <div id="my-signin2"></div>
-
-  <script>
-    function onSuccess(googleUser) {
-      console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-    }
-    function onFailure(error) {
-      console.log(error);
-    }
-    function renderButton() {
-      gapi.signin2.render('my-signin2', {
-        'scope': 'profile email https://www.googleapis.com/auth/calendar.events',
-        'width': 240,
-        'height': 50,
-        'longtitle': true,
-        'theme': 'dark',
-        'onsuccess': onSuccess,
-        'onfailure': onFailure
-      });
-    }
-  </script>
-
-
             <div class="g-signin2" data-onsuccess="onSignIn"></div>
-            <fb:login-button scope="public_profile,email" id="fbLogin" onlogin="checkLoginState();"></fb:login-button>
+            <div id="my-signin2" style="display:none;"></div>
           </div>
+
           <p><a href="#signUpModal" data-toggle="modal"  data-dismiss="modal">Sign up now>></a></p>
         </div>
   
@@ -511,6 +488,27 @@
       </div>
     </div>
   </div>
+  </div>
+
+  <!-- Modal to show successful calendar addition -->
+  <div class="modal fade" id="calendarSuccessModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Successful event creation!</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span class="closeConfirmBooking" aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- Body -->
+        <div class="modal-body">
+          <div class="row">
+            <p> Please find your new event at this <a id="calendarLink"> link</a>. </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 <script src='javascripts/rome.min.js'></script> <!-- date and time picker -->
