@@ -245,13 +245,15 @@
             <a href="#">Sign in</a> or <a href="#">sign up</a> to proceed using an account
           </p>
           <p>First name:</p>
-          <input class = "confirmBookingInput" type="text" name="firstname"><br>
+          <input class = "confirmBookingInput" type="text" id="firstname"><br>
           <p>Last name:</p>
-          <input class = "confirmBookingInput" type="text" name="lastname"><br>
+          <input class = "confirmBookingInput" type="text" id="lastname"><br>
           <p>Email address:</p>
-          <input class = "confirmBookingInput" type="text" name="email"><br>
+          <input class = "confirmBookingInput" type="text" id="email"><br>
           <p>Phone number:</p>
-          <input class ="confirmBookingInput" type="text" name="phonenumber">
+          <input class ="confirmBookingInput" type="text" id="phonenumber">
+          <p>Additional Information:</p>
+          <input class ="confirmBookingInput" type="text" id="additionalInformation">
 	  </div>        
         </div>
         <!-- Footer -->
@@ -275,7 +277,7 @@
         </div>
         <!-- Body -->
         <div class="modal-body">
-          <p id="confirmedBookingMessage">We've reserved your table for you.<br><br>Your booking id is: 123456<br><br>A confirmation email has been sent to <i>emailAddress</i><br><br>To manage your current bookings, click <a id="goManageBookings" href="#" data-toggle="modal" data-target="#bookingModal">here</a><br><br>To add this booking to your Google Calendar, click <a href="#">here</a></p>
+          <p id="confirmedBookingMessage">We've reserved your table for you.<br><br>Your booking id is: <span id="bookingid"></span><br><br>A confirmation email has been sent to <i><span id="insertEmail"></span></i><br><br>To manage your current bookings, click <a id="goManageBookings" href="#" data-toggle="modal" data-target="#bookingModal">here</a><br><br>To add this booking to your Google Calendar, click <a href="#">here</a></p>
         </div>
       </div>
     </div>
