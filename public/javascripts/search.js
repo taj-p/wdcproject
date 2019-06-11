@@ -171,16 +171,13 @@ function createRestaurantResultDiv(Restaurant) {
     var query = uri.query(true);
     query.search = searchQuery;
     query.date = dateQuery;
-<<<<<<< HEAD
     query.time = Restaurant.availableTimes[k];
-=======
     var time24 = bestAvailableTimes[k];
     var hour = time24.hour;
     var minute = time24.minute;
 
     var time = moment(query.date + " " + hour + ":" + minute, 'YYYY-MM-DD HH:mm').format('HH:mm');
     query.time = time;
->>>>>>> restaurantPage-taj
     query.numguests = numGuestsQuery;
     query.restaurantid = Restaurant.id;
     uri.query(query);
