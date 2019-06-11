@@ -158,13 +158,14 @@
 						</div>
 
 						<!-- Diet options -->
+						<!-- NOTE: will not update -->
 						<div class="form-group">
 							<p>Select diet types:</p>
 						    <label class="checkbox-inline" v-for="d in dietList">
 						    	<input type="checkbox" :value="d" :checked="selectDietContains(d.toLowerCase())" style="margin: 10px 0px 15px 10px;"/> {{d}} 
 						    </label>
 						</div>
-						
+
 						<!-- Restaurant Cost -->
 						<div class="form-group">
 							<p>Cost:</p>
@@ -187,7 +188,7 @@
 
 			<!-- Done button -->
 			<div class="row justify-content-center">
-				<button class="btn btn-primary btn-lg">Done</button>
+				<button class="btn btn-primary btn-lg" onclick="updateRestaurantInfo()">Done</button>
 			</div>
 		</div>
 

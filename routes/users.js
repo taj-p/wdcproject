@@ -411,10 +411,10 @@ router.post('/addNewRestInfo', function(req, res, next) {
 
 		var newRestID = uuid.v4();
 		var query = "INSERT INTO restaurant (restaurant_id, account_id, name, address, " + 
-			"phone, capacity, desciption, cost, cuisine, diet_options) " + 
+			"phone, capacity, description, cost, cuisine, diet_options) " + 
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";	
 		connection.query(query, [newRestID, req.session.userid, req.body.name,
-			req.body.address, req.body.phone, req.body.capacity, req.body.desciption, req.body.cost,
+			req.body.address, req.body.phone, req.body.capacity, req.body.description, req.body.cost,
 			req.body.cuisine, req.body.diet_options],
 			function(err, rows, fields) {
 				if (err) {
@@ -442,10 +442,10 @@ router.post('/updateRestInfo', function(req, res, next) {
 			res.send();
 		}
 
-		var query = "UPDATE restaurant SET name=?, address=?, phone=?, capacity=?, desciption=?, "+
+		var query = "UPDATE restaurant SET name=?, address=?, phone=?, capacity=?, description=?, "+
 			"cost=?, cuisine=?, diet_options=? WHERE restaurant_id=? AND account_id=?;";	
 		connection.query(query, [req.body.name, req.body.address, req.body.phone, req.body.capacity,
-			req.body.desciption, req.body.cost, req.body.cuisine, req.body.diet_options,
+			req.body.description, req.body.cost, req.body.cuisine, req.body.diet_options,
 			req.session.restaurantid, req.session.userid],
 			function(err, rows, fields) {
 				if (err) {
