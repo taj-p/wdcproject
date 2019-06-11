@@ -293,3 +293,37 @@ var bookingInfo = new Vue({
   }
 });
 
+//var bookings = [];
+//function populateBookings() {
+//  var xhttp = new XMLHttpRequest();
+//
+//  xhttp.onreadystatechange = function() {
+//    if (this.readyState == 4 & this.status == 200) {
+//      bookings = JSON.parse(this.responseText);
+//      createBookings();
+//    }
+//  };
+//
+//  xhttp.open("GET", 'users/userReservations.json', true);
+//  xhttp.send();
+//}
+//
+//function createBookings() {
+//  var bookingsInfo = document.getElementById("bookingsInfo");
+//  for (var i = 0; i < bookings.length(); i++) {
+//    var newBooking = document.createElement("DIV");
+//    newBooking.innerHTML = `
+//      <div class="row">
+//        <div class="col-4">
+//          <img class="smallImage" v-bind:src="b.url" alt="restaurant image">
+//        </div>
+//        <div class="col-8">
+//          <h5>{{b.name}}</h5>
+//          <p> {{b.date}} | {{b.time}} | {{b.guests}} guests</p>
+//          <button class="btn btn-sm btn-danger">Remove</button>
+//        <hr/>
+//        </div>
+//      </div>
+//    `
+//  }
+//}

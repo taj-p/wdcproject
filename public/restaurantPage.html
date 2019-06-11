@@ -65,10 +65,12 @@
     </div>
   </nav>
 
-  <!-- breadcrumbs -->
-  <div class="container-fluid breadcrumbs">
-    <div class="container">
-        <p> <a href='/'>Home</a> > <a id='searchBreadcrumb' href="">Search</a> > <i id="breadcrumbName">Restaurant Name</i> </p>
+  <div id="restaurantDetails">
+    <!-- breadcrumbs -->
+    <div class="container-fluid breadcrumbs">
+      <div class="container">
+          <p> <a href='/'>Home</a> > <a id='searchBreadcrumb' href="">Search</a> > <i id="breadcrumbName">{{ name }}</i> </p>
+      </div>
     </div>
   </div>
 
@@ -86,10 +88,6 @@
         <!-- slideshow -->
         <div id="bigImageSection" class="container-fluid" style="padding-top: 10px">
 
-          <!-- These need to be changed - they don't show up properly -->
-          <!-- <a class="prev" onlick="plusSlides(-1)">❮</a> -->
-          <!-- <a class="prev" onlick="plusSlides(1)">❯</a> -->
-
           <!-- grid of photos -->
           <div id="gridImageSection" class ="row">
           </div>
@@ -104,80 +102,90 @@
           <!-- <button class="navButtons" id="mapButton">Map</button> -->
          </div>
 
-        <!-- about section -->
-        <div>
-          <h2 class="headings" id="aboutSection"><b>About</b></h2>
-          <p id="aboutInfo"></p>
-        </div>
+          <!-- about section -->
+          <div class="section">
+            <h2 class="headings" id="aboutSection"><b>About</b></h2>
+            <p id="aboutInfo"></p>
+            <br>
 
-        <!-- menu section -->
-        <div>
-          <h2 class="headings" id="menuSection"><b>Menu</b></h2>
-          <p id="menuInfo"></p>
-        </div>
+          <!-- reviews section -->
+            <h2 class="headings" id="reviewsSection"><b>Reviews</b></h2>
+            <div id="reviews"></div>
 
-        <!-- reviews section -->
-        <div>
-          <h2 class="headings" id="reviewsSection"><b>Reviews</b></h2>
-          <p id="reviewInfo"></p>
-        </div>
 
-        <!-- map section -->
-        <!-- <div> -->
-        <!--   <h2 class="headings" id="mapSection"><b>Map</b></h2> -->
-        <!--   <p>Address in text form appears here</p> -->
-        <!--   <p>Map appears below text</p> -->
-        <!-- </div> -->
-      </div>
-
-      <!-- booking information -->
-      <div class="order-1 order-md-2 col-md-3" id="booking">
-        <div id="bookingContent">
-          <h1 id="reserveNow"><b>Make a Reservation</b></h1>
-
-          <!-- number of people selector --> 
-          <div class="input-group-prepend searchSymbol" id="guestSetting">
-            <i class="icon far fa-user fa-2x"></i>
-            <select id='peopleSelector' class='input topRowElement' name="peopleSelector">
-              <option value="1">1 people</option>
-              <option value="2">2 people</option>
-              <option value="3">3 people</option>
-              <option value="4">4 people</option>
-              <option value="5">5 people</option>
-              <option value="6">6 people</option>
-              <option value="7">7 people</option>
-              <option value="8">8 people</option>
-              <option value="9">9 people</option>
-              <option value="10">10 people</option>
-              <option value="11">11 people</option>
-              <option value="12">12 people</option>
-              <option value="13">13 people</option>
-              <option value="14">14 people</option>
-              <option value="15">15 people</option>
-              <option value="16">16 people</option>
-              <option value="17">17 people</option>
-              <option value="18">18 people</option>
-              <option value="19">19 people</option>
-              <option value="20">20+ people</option>
-            </select>
+          <div id="insertReview" class="col-12">
+            <h4> Leave a review </h4>
+            <textarea placeholder="Review description" name="description" style="min-width: 90%"></textarea>
+            <p> 
+            Overall: <input type="number" name="overall" min="1" max="5" value="5">
+            Food: <input type="number" name="overall" min="1" max="5" value="5">
+            Service: <input type="number" name="overall" min="1" max="5" value="5">
+            Ambience: <input type="number" name="overall" min="1" max="5" value="5">
+            Value: <input type="number" name="overall" min="1" max="5" value="5">
+            Noise: <select class='input' id="noise_rating">
+                <option value="Quiet">Quiet</option>
+                <option value="Moderate" selected="selected">Moderate</option>
+                <option value="Loud">Loud</option>
+              </select>
+            </p>
+            <div class="row mx-auto pt-2 pb-2">
+              <input type="text" placeholder="Your Name" name="description" style="min-width: 20%"></textarea>
+            </div>
+            <div class="row mx-auto">
+              <button onclick="submitReview()" class="btn btn-info">Submit</button>
+            </div>
           </div>
-
-          <!-- date picker -->  
-          <div class="input-group-prepend searchSymbol" id="dateSetting">
-            <i class="icon far fa-calendar-alt fa-2x"></i>
-            <input id='datePicker' class='input topRowElement'/>
-          </div>
-
-          <!-- time picker --> 
-          <div class="input-group-prepend searchSymbol" id="timeSetting">
-            <i class="icon far fa-clock fa-2x"></i>
-            <input id='timePicker' class='input topRowElement'/>
           </div>
         </div>
-          <button id="buttonConfirmBooking" class="btn btn-info" data-toggle="modal" data-target="#modalConfirmBooking" onclick="confirmBookingDetails()">Confirm your Reservation</button>
+
+        <!-- booking information -->
+        <div class="order-1 order-md-2 col-md-3" id="booking">
+          <div id="bookingContent">
+            <h1 id="reserveNow"><b>Make a Reservation</b></h1>
+
+            <!-- number of people selector --> 
+            <div class="input-group-prepend searchSymbol" id="guestSetting">
+              <i class="icon far fa-user fa-2x"></i>
+              <select v-model="guestsSelected" id='peopleSelector' class='input topRowElement' name="peopleSelector">
+                <option value="1">1 people</option>
+                <option value="2">2 people</option>
+                <option value="3">3 people</option>
+                <option value="4">4 people</option>
+                <option value="5">5 people</option>
+                <option value="6">6 people</option>
+                <option value="7">7 people</option>
+                <option value="8">8 people</option>
+                <option value="9">9 people</option>
+                <option value="10">10 people</option>
+                <option value="11">11 people</option>
+                <option value="12">12 people</option>
+                <option value="13">13 people</option>
+                <option value="14">14 people</option>
+                <option value="15">15 people</option>
+                <option value="16">16 people</option>
+                <option value="17">17 people</option>
+                <option value="18">18 people</option>
+                <option value="19">19 people</option>
+                <option value="20+">20+ people</option>
+              </select>
+            </div>
+
+            <!-- date picker -->  
+            <div class="input-group-prepend searchSymbol" id="dateSetting">
+              <i class="icon far fa-calendar-alt fa-2x"></i>
+              <input v-model="dateSelected" id='datePicker' class='input topRowElement'/>
+            </div>
+
+            <!-- time picker --> 
+            <div class="input-group-prepend searchSymbol" id="timeSetting">
+              <i class="icon far fa-clock fa-2x"></i>
+              <input id='timePicker' class='input topRowElement'/>
+            </div>
+          </div>
+            <button id="buttonConfirmBooking" class="btn btn-info" data-toggle="modal" data-target="#modalConfirmBooking" onclick="confirmBookingDetails()">Confirm your Reservation</button>
+        </div>
       </div>
     </div>
-  </div>
 
   <!-- Modal to search for a booking -->
   <div class="modal fade" id="searchBooking">
@@ -232,6 +240,7 @@
             <div id="dateCB" class="icon far fa-calendar-alt fa-lg"></div>
             <div id="timeCB" class="icon far fa-clock fa-lg"></div>  
           </div>
+          <div id="removeIfLoggedIn">
           <p id="signInMessage">
             <a href="#">Sign in</a> or <a href="#">sign up</a> to proceed using an account
           </p>
@@ -243,15 +252,11 @@
           <input class = "confirmBookingInput" type="text" name="email"><br>
           <p>Phone number:</p>
           <input class ="confirmBookingInput" type="text" name="phonenumber">
-          <br>
-          <br>
-          <div class="row tm-4 tp-4 mx-auto">
-            <button id="calendar" class="btn btn-info" onclick="addToCalendar();">Add to Google Calendar</button>
-          </div>
+	  </div>        
         </div>
         <!-- Footer -->
         <div class="modal-footer">
-          <button id="finalConfirm" class="btn btn-success">Reserve Now</button>
+          <button id="finalConfirm" class="btn btn-success" onclick="confirmReservation();">Reserve Now</button>
         </div>
       </div>
     </div>
@@ -294,7 +299,7 @@
             </button>
           </div>
           <!-- Body -->
-          <div class="modal-body">
+          <div class="modal-body" id="bookingsInfo">
             <div class="row" v-for="b in bookings">
               <div class="col-4">
                 <img class="smallImage" v-bind:src="b.url" alt="restaurant image">
