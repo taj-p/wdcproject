@@ -7,12 +7,16 @@ function login() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       alert("Success");
-
 	    document.getElementById("signUp").style.display = "none";
 	    document.getElementById("signIn").style.display = "none";
 	    $('#signInModal').modal('hide');
 	    document.getElementById("account").style.display = "block";
       document.getElementById("email-setting").innerHTML = "<b>Email: </b>"+document.getElementById('email-signIn').value;
+      if (xhttp.responseText === "manager") {
+        document.getElementById("manage-restaurant-option").style.display = "block";
+      } else {
+        document.getElementById("manage-restaurant-option").style.display = "none";
+      }
 
     } else if (this.readyState == 4 && this.status == 403){
       alert("E-mail / password incorrect");
@@ -87,13 +91,30 @@ function onSignIn(googleUser) {
 
 function logout()
 {
-    document.getElementById("signUp").style.display = "block";
-    document.getElementById("signIn").style.display = "block";
-    document.getElementById("account").style.display = "none";
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-      console.log('User signed out.');
-    });
+    // Create new AJAX request
+    var xhttp = new XMLHttpRequest();
+
+    // Handle response
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+      alert("Success");
+      document.getElementById("signUp").style.display = "block";
+      document.getElementById("signIn").style.display = "block";
+      document.getElementById("account").style.display = "none";
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+      document.getElementById("setEmail").style.display = "none";
+      document.getElementById("setPsw").style.display = "none";
+      }
+    };
+
+    // Open connection
+    xhttp.open("POST", "/logout", true);
+
+    // Send empty request
+    xhttp.send();
 }
 
 function settings() {

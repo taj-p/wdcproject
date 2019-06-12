@@ -6,7 +6,7 @@ var moment = require('moment');
 // cuisines that are available in the database
 const cuisines = [
   "Italian",  "Mexican", "Japanese", "Steakhouse", "Indian",  "Vietnamese", "Australian",
-  "Filipino", "Chinese", "Dessert", "Malaysian", "Polish", "Pakistani", "Korean"
+  "Filipino", "Chinese", "Dessert", "Malaysian", "Polish", "Pakistani", "Korean", "Dessert"
 ];
 const costs = [ "$", "$$", "$$$" ];
 const diet_options = [ "Vegetarian", "Vegan", "Halal", "Gluten-free" ];
@@ -61,7 +61,11 @@ router.post('/login', function(req, res, next) {
         req.session.user = true;
         req.session.userid = rows[0].account_id;
         req.session.manager = rows[0].is_manager;
-        res.send();
+        if (req.session.manager == true) {
+          res.send('manager');
+        } else {
+          res.send();
+        }
       } else {
         res.sendStatus(403);
         return;
