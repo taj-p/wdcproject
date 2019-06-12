@@ -124,10 +124,10 @@ function fillRestaurantInfo() {
       restaurantInfo.name = results[0].name;
       // Address
       var add = JSON.parse(results[0].address);
-      restaurantInfo.address = add.street;
-      restaurantInfo.suburb = add.suburb;
-      restaurantInfo.state = add.state;
-      restaurantInfo.postal_code = add.postal_code;
+      restaurantInfo.address = add.Street;
+      restaurantInfo.suburb = add.Suburb;
+      restaurantInfo.state = add.State;
+      restaurantInfo.postal_code = add.Postal_code;
       restaurantInfo.description = results[0].description;
       restaurantInfo.cost = results[0].cost;
       restaurantInfo.initialCost = restaurantInfo.cost;
@@ -148,6 +148,7 @@ function fillRestaurantInfo() {
         }
       }
       restaurantInfo.originalReviewCounts = results[0].review_count;
+      restaurantInfo.id = results[0].restaurant_id;
     }
   };
 
@@ -199,6 +200,7 @@ var restaurantInfo = new Vue({
   el: '#restaurantInfo',
   data: {
     validUser: false,
+    id: '',
     name: '',
     address: '',
     suburb: '',
