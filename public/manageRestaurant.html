@@ -1,485 +1,485 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Odyssey Eats Manage Your Restaurant</title>
-	<meta charset="utf-8">
+  <title>Odyssey Eats Manage Your Restaurant</title>
+  <meta charset="utf-8">
 
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Restaurant search service">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Restaurant search service">
 
-	<link rel="stylesheet" href="stylesheets/bootstrap.min.css">
-	<link rel="stylesheet" href="stylesheets/search.css">
-	<link rel="stylesheet" href="stylesheets/navigationBar.css">
+  <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+  <link rel="stylesheet" href="stylesheets/search.css">
+  <link rel="stylesheet" href="stylesheets/navigationBar.css">
   <link rel="stylesheet" href="stylesheets/owner.css">
 
-	<!-- jquery CDN -->
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
+  <!-- jquery CDN -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
 
-	<!-- Vue.js -->
-	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- Vue.js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-	<!-- date and time picker -->
-	<link href='stylesheets/rome.min.css' rel='stylesheet' type='text/css' />
-	<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gijgo@1.9.13/css/gijgo.min.css" type="text/css">
+  <!-- date and time picker -->
+  <link href='stylesheets/rome.min.css' rel='stylesheet' type='text/css' />
+  <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gijgo@1.9.13/css/gijgo.min.css" type="text/css">
 
-	<!-- another time picker -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+  <!-- another time picker -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 
-	<!-- icons -->
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+  <!-- icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 </head>
 <body>
-	<div id="restaurantInfo">
-		 <!-- top navbar -->
-		<nav class="navbar navbar-expand-sm navbar-dark">
-			<div class="container"> <!-- to keep nav items from hugging borders in large viewports -->
-				<a class="navbar-brand" href="/">Odyssey Eats</a>
-				<div class="dropdown"> <!-- to ensure sign up and sign in links are left aligned -->
-					<button v-show="validUser" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
-						Account
-					</button>
-					<div class="dropdown-menu">
+  <div id="restaurantInfo">
+     <!-- top navbar -->
+    <nav class="navbar navbar-expand-sm navbar-dark">
+      <div class="container"> <!-- to keep nav items from hugging borders in large viewports -->
+        <a class="navbar-brand" href="/">Odyssey Eats</a>
+        <div class="dropdown"> <!-- to ensure sign up and sign in links are left aligned -->
+          <button v-show="validUser" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+            Account
+          </button>
+          <div class="dropdown-menu">
                         <!-- Settings are currently not implemented -->
                         <!-- <a class="dropdown-item" href="/">Setting</a> -->
-						<a class="dropdown-item" href="manager.html">Manager home page</a>
-						<a class="dropdown-item" href="/" onclick="logout()">Log out</a>
-					</div>
-					<span class="caret"></span>
-				</div>
-			</div>
-		</nav>
+            <a class="dropdown-item" href="manager.html">Manager home page</a>
+            <a class="dropdown-item" href="/" onclick="logout()">Log out</a>
+          </div>
+          <span class="caret"></span>
+        </div>
+      </div>
+    </nav>
 
-		<!-- breadcrumbs -->
-		<div class="container-fluid breadcrumbs">
-			<div class="container">
-				<p> <a href="/">Home</a> > <a href="manager.html">Manager</a> > <i>{{name}} Manager</i> </p>
-			</div>
-		</div>
-		
-		<br />
+    <!-- breadcrumbs -->
+    <div class="container-fluid breadcrumbs">
+      <div class="container">
+        <p> <a href="/">Home</a> > <a href="manager.html">Manager</a> > <i>{{name}} Manager</i> </p>
+      </div>
+    </div>
+    
+    <br />
 
-		<div v-if="validUser">
-		<!-- nav bar -->
-		<br />
-		<div class="container col-md-10 col-xs-12 col-sm-12">
-			<nav class="navbar navbar-expand-md navbar-light bg-light">
-				<!-- set button style -->
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+    <div v-if="validUser">
+    <!-- nav bar -->
+    <br />
+    <div class="container col-md-10 col-xs-12 col-sm-12">
+      <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <!-- set button style -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-				<!-- define navigation links -->
-				<div class="collapse navbar-collapse" id="collapsibleNavbar">
-					<ul class="navbar-nav">
-           				 <li><a id="restaurantInfoSelected" class="nav item nav-link" v-bind:class="[{ active: restaurantInfo }]" v-on:click="restaurantInfo=true; manageReservation=false;" href="#">Restaurant Information</a></li>
-						<li><a id="manageReservationSelected" class="nav item nav-link" v-bind:class="[{ active: manageReservation }]" v-on:click="restaurantInfo=false; manageReservation=true;" href="#" >Manage Reservations</a></li>
-						<li><a class="nav item nav-link" v-bind:href="'/restaurantPage.html?restaurantid='+id">Preview</a></li>
-					</ul>
-				</div>
-			</nav>
-		</div>
+        <!-- define navigation links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+          <ul class="navbar-nav">
+                    <li><a id="restaurantInfoSelected" class="nav item nav-link" v-bind:class="[{ active: restaurantInfo }]" v-on:click="restaurantInfo=true; manageReservation=false;" href="#">Restaurant Information</a></li>
+            <li><a id="manageReservationSelected" class="nav item nav-link" v-bind:class="[{ active: manageReservation }]" v-on:click="restaurantInfo=false; manageReservation=true;" href="#" >Manage Reservations</a></li>
+            <li><a class="nav item nav-link" v-bind:href="'/restaurantPage.html?restaurantid='+id">Preview</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
 
-		<!-- body of restaurant info -->
-		<br />
-		<div v-if="restaurantInfo" class="container-fluid">
-			<form>
-				<div class="row justify-content-center">
-					<!-- First column -->
-					<div class="col-md-4">
-						<!-- Name -->
-						<div class="form-group">
-							<label for="name">Restaurant Name: </label>
-							<input id="name" type="text" class="form-control" v-model="name" placeholder="Enter restaurant name" />
-						</div>
-						<!-- Phone -->
-						<div class="form-group">
-							<label for="phone">Phone number: </label> <br/>
-							<input id="phone" type="text" class="form-control" v-model="phone" placeholder="Enter restaurant's phone number" />
-						</div>
-						<!-- Address -->
-						<div class="form-group">
-							<label for="address">Address: </label> <br/>
-							<input id="address" type="text" class="form-control" v-model="address" placeholder="Enter restaurant's street" />
-							<label for="suburb">Suburb: </label>
-							<input id="suburb" type="text" class="form-control" v-model="suburb" placeholder="Enter restaurant's suburb" />
-							<label for="state">State: </label>
-							<input id="state" type="text" class="form-control" v-model="state" placeholder="Enter restaurant's state" />
-							<label for="postal-code">Postal Code: </label>
-							<input id="postal-code" type="text" class="form-control" v-model="postal_code" placeholder="Enter restaurant's postal code" />
-						</div>
-						<!-- Restaurant Images -->
-						<div class="form-group">
-							<label for="restaurantImages">Upload Restaurant Images: </label> <br/>
-							<input id="restaurantImages" type="file" multiple accept="image/*" class="form-control-file" />
-						</div>
-						<!-- Opening Hours -->
-						<div class="form-group">
-							<label id="restaurantOpening">Opening Times: </label> <br/>
-							<div v-for="currentDay in openings"> 
-								<p>{{currentDay.day}}:</p>
-								<div v-for="dayCount in currentDay.count">
-									<input class="input-sm business-hours-input" style="width:7em" /> 
-									to 
-									<input class="input-sm business-hours-input" style="width:7em"/> 
-									<a href="#" class="addOpenings" v-on:click="currentDay.count++"><i class="material-icons text-small">add</i></a>
-								</div>
-								<br/>
-							</div>
-						</div>
-						
-					</div>
-
-
-					<!-- Second column -->
-			  		<div class="col-md-6">
-			  			<!-- Decription -->
-						<div class="form-group">
-							<label for="description">Description: </label> <br/>
-							<textarea class="form-control" v-model="description" placeholder="Fill in restaurant's description" rows="5" id="description"> </textarea>
-						</div>
-						<!-- Menu Images -->
-						<div class="form-group">
-							<label for="menuImages">Upload Menu Images: </label> <br/>
-							<input id="menuImages" type="file" multiple accept="image/*" class="form-control-file" />
-						</div>
-						<!-- Cuisine types -->
-						<div class="form-group">
-							<label>Select cuisine:</label>
-							<select class="form-control" v-model="selectedCuisine">
-							    <option v-for="c in cuisineList" :selected="c == selectedCuisine"
-							        :value="c">
-							        {{c}}
-							    </option>
-							</select>
-						</div>
-
-						<!-- Diet options -->
-						<!-- NOTE: will not update -->
-						<div class="form-group">
-							<p>Select diet types:</p>
-						    <label class="checkbox-inline" v-for="d in dietList">
-						    	<input type="checkbox" :value="d" :checked="selectDietContains(d)" style="margin: 10px 0px 15px 10px;"/> {{d}} 
-						    </label>
-						</div>
-
-						<!-- Restaurant Cost -->
-						<div class="form-group">
-							<p>Cost:</p>
-							<label class="radio-inline">
-								<input type="radio" name="optradio" v-model="cost" value="$" 
-									:selected="cost == initialCost"/> $ (&lt; $20/person)
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="optradio" v-model="cost" value="$$"
-									:selected="cost == initialCost"/> $$ (&lt; $50/person)
-							</label>
-							<label class="radio-inline">
-								<input type="radio" name="optradio" v-model="cost" value="$$$"
-									:selected="cost == initialCost"/> $$$ (&gt; $50/person)
-							</label>
- 						</div>
-			  		</div>
-				</div>
-			</form>
-
-			<!-- Done button -->
-			<div class="row justify-content-center">
-				<button class="btn btn-primary btn-lg" onclick="updateRestaurantInfo()">Done</button>
-			</div>
-		</div>
+    <!-- body of restaurant info -->
+    <br />
+    <div v-if="restaurantInfo" class="container-fluid">
+      <form>
+        <div class="row justify-content-center">
+          <!-- First column -->
+          <div class="col-md-4">
+            <!-- Name -->
+            <div class="form-group">
+              <label for="name">Restaurant Name: </label>
+              <input id="name" type="text" class="form-control" v-model="name" placeholder="Enter restaurant name" />
+            </div>
+            <!-- Phone -->
+            <div class="form-group">
+              <label for="phone">Phone number: </label> <br/>
+              <input id="phone" type="text" class="form-control" v-model="phone" placeholder="Enter restaurant's phone number" />
+            </div>
+            <!-- Address -->
+            <div class="form-group">
+              <label for="address">Address: </label> <br/>
+              <input id="address" type="text" class="form-control" v-model="address" placeholder="Enter restaurant's street" />
+              <label for="suburb">Suburb: </label>
+              <input id="suburb" type="text" class="form-control" v-model="suburb" placeholder="Enter restaurant's suburb" />
+              <label for="state">State: </label>
+              <input id="state" type="text" class="form-control" v-model="state" placeholder="Enter restaurant's state" />
+              <label for="postal-code">Postal Code: </label>
+              <input id="postal-code" type="text" class="form-control" v-model="postal_code" placeholder="Enter restaurant's postal code" />
+            </div>
+            <!-- Restaurant Images -->
+            <div class="form-group">
+              <label for="restaurantImages">Upload Restaurant Images: </label> <br/>
+              <input id="restaurantImages" type="file" multiple accept="image/*" class="form-control-file" />
+            </div>
+            <!-- Opening Hours -->
+            <div class="form-group">
+              <label id="restaurantOpening">Opening Times: </label> <br/>
+              <div v-for="currentDay in openings"> 
+                <p>{{currentDay.day}}:</p>
+                <div v-for="dayCount in currentDay.count">
+                  <input class="input-sm business-hours-input" style="width:7em" /> 
+                  to 
+                  <input class="input-sm business-hours-input" style="width:7em"/> 
+                  <a href="#" class="addOpenings" v-on:click="currentDay.count++"><i class="material-icons text-small">add</i></a>
+                </div>
+                <br/>
+              </div>
+            </div>
+            
+          </div>
 
 
-		<!-- Manage Restaurant -->
-		<div v-else-if="manageReservation" class="container-fluid">
-			<div class="row justify-content-center">
-				<div class="col-md-6 order-2 order-md-1">
-					<!-- date picker -->
-					<input class="reservation-date" type="text"/>
-					<br />
+          <!-- Second column -->
+            <div class="col-md-6">
+              <!-- Decription -->
+            <div class="form-group">
+              <label for="description">Description: </label> <br/>
+              <textarea class="form-control" v-model="description" placeholder="Fill in restaurant's description" rows="5" id="description"> </textarea>
+            </div>
+            <!-- Menu Images -->
+            <div class="form-group">
+              <label for="menuImages">Upload Menu Images: </label> <br/>
+              <input id="menuImages" type="file" multiple accept="image/*" class="form-control-file" />
+            </div>
+            <!-- Cuisine types -->
+            <div class="form-group">
+              <label>Select cuisine:</label>
+              <select class="form-control" v-model="selectedCuisine">
+                  <option v-for="c in cuisineList" :selected="c == selectedCuisine"
+                      :value="c">
+                      {{c}}
+                  </option>
+              </select>
+            </div>
 
-					<!-- Current timeslot setting -->
-					<div>
-						<p>Restaurant's current seating arrangments:</p>
-						<ul class="text-small">
-							<li>{{ availableSeats }} seats available</li>
-							<li v-for="slots in timeSlots">{{slots.min}} - {{slots.max}} people: {{slots.duration}} hours seating</li>
-						</ul>
-					</div>
+            <!-- Diet options -->
+            <!-- NOTE: will not update -->
+            <div class="form-group">
+              <p>Select diet types:</p>
+                <label class="checkbox-inline" v-for="d in dietList">
+                  <input type="checkbox" :value="d" :checked="selectDietContains(d)" style="margin: 10px 0px 15px 10px;"/> {{d}} 
+                </label>
+            </div>
 
-					<!-- Timetable -->
-					<br />
-					<table class="table" style="font-size: small;">
-						<thead class="thead-light">
-							<tr>
-								<th scope="col">Time</th>
-								<th scope="col">Seats available</th>
-								<th scope="col">New Upcoming Reservation</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- If there is a new reservation -->
-							<tr v-for="res in reservations">
-								<template v-if="res.newReservation">
-									<td>{{ res.start }}</td>
-									<td>{{ res.seatsAvailable }}</td>
-									<td>
-										<div class="row">
-											<div class="col-sm-9">
-												<p><b>First Name:</b> {{res.name}}</p>
-												<p><b>Notes:</b> {{res.notes}}</p>
-												<br/>
-												<p><i class="material-icons text-small">people</i> {{res.people}} guests</p>
-												<p><i class="material-icons text-small">access_time</i> {{res.duration}} hours</p>
-												<p><i class="material-icons text-small">phone</i> {{res.phone}}</p>
-												<br />
-												
-											</div>
-											<div class="col-sm-2">
-												<a href="#" data-toggle="modal" data-target="#editReservations"><i class="material-icons text-small">edit</i>Edit</a>
-											</div>
-										</div>
-									</td>
-								</template>
-								<!-- If there isn't a new reservation -->
-								<template v-else>
-									<td>{{ res.start }} - {{ res.end }}</td>
-									<td>{{ res.seatsAvailable }}</td>
-									<td>
-										<div class="row">
-											<div class="col-sm-9">
-												N/A
-											</div>
-											<div class="col-sm-2">
-												<a href="#" data-toggle="modal" data-target="#addReservation"><i class="material-icons text-small">add</i>Add</a>
-											</div>
-										</div>
-									</td>
-								</template>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+            <!-- Restaurant Cost -->
+            <div class="form-group">
+              <p>Cost:</p>
+              <label class="radio-inline">
+                <input type="radio" name="optradio" v-model="cost" value="$" 
+                  :selected="cost == initialCost"/> $ (&lt; $20/person)
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="optradio" v-model="cost" value="$$"
+                  :selected="cost == initialCost"/> $$ (&lt; $50/person)
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="optradio" v-model="cost" value="$$$"
+                  :selected="cost == initialCost"/> $$$ (&gt; $50/person)
+              </label>
+             </div>
+            </div>
+        </div>
+      </form>
 
-				<!-- Second column -->
-				<div class="col-md-4 order-1 order-md-2">
-					<!-- Current reservations -->
-					<div class="box">
-						<div class="col-5 col-sm-5 col-md-12">
-							<p><i class="material-icons align-bottom">local_dining</i> {{ nReservations }} Reservations</p>
-						</div>
-						<div class="col-5 col-sm-5 col-md-12">
-							<p><i class="material-icons align-bottom">people</i> {{ nGuests }} Guests</p>
-						</div>
-					</div>
+      <!-- Done button -->
+      <div class="row justify-content-center">
+        <button class="btn btn-primary btn-lg" onclick="updateRestaurantInfo()">Done</button>
+      </div>
+    </div>
 
-					<br />
-					<div class="box">
-						<div class="col-5 col-sm-5 col-md-12">
-							<!-- Stop online reservation -->
-							<button v-if="stopOnline" type="button" class="btn btn-warning btn-sm vertical-button" data-toggle="modal" data-target="#areYouSure">
-								<i class="fas fa-unlock fa-lg"></i> Start online
-							</button>
-							<button v-else type="button" class="btn btn-danger btn-sm vertical-button" data-toggle="modal" data-target="#areYouSure">
-								<i class="fas fa-lock fa-lg"></i> Stop online
-							</button>
-						</div>
-						<div class="col-5 col-sm-5 col-md-12">
-							<!-- Add reservation -->
-							<button type="button" class="btn btn-primary btn-sm vertical-button" data-toggle="modal" data-target="#addReservation">
-								<i class="material-icons align-bottom">add_circle_outline</i> Add reservation
-							</button>
-						</div>
-						<div class="col-5 col-sm-5 col-md-12">
-							<!-- Edit timeslots -->
-							<button type="button" class="btn btn-primary btn-sm vertical-button" data-toggle="modal" data-target="#editTimeArrangements">
-								<i class="material-icons align-bottom">edit</i> Edit timeslots
-							</button>
-						</div>
-					</div>
 
-					<!-- Are-you-sure pop-up -->
-					<div class="modal fade" id="areYouSure" tabindex="-1" role="dialog">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<!-- Header -->
-								<div class="modal-header">
-									<h5 class="modal-title">
-										Are you sure?
-									</h5>
-									<!-- Closing buttion -->
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<!-- Body -->
-								<div class="modal-body">
-									<p v-if="stopOnline">Are you sure you want to start online reservations for today?</p>
-									<p v-else>Are you sure you want to stop online reservations?</p>
-								</div>
-								<!-- Footer -->
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="stopOnline=!stopOnline">Yes</button>
-									<button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-								</div>
-							</div>
-						</div>
-					</div>
+    <!-- Manage Restaurant -->
+    <div v-else-if="manageReservation" class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-md-6 order-2 order-md-1">
+          <!-- date picker -->
+          <input class="reservation-date" type="text"/>
+          <br />
 
-					<!-- Edit Reservation pop-up -->
-					<div class="modal fade" id="editReservations" tabindex="-1" role="dialog">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<!-- Header -->
-								<div class="modal-header">
-									<h5 class="modal-title">
-										Edit Reservations
-									</h5>
-									<!-- Closing buttion -->
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<!-- Body -->
-								<div class="modal-body">
-									<form class="form">
-										<div class="form-group">
-											<label>Reservation start time: </label>
-											<input type="text" class="form-control" placeholder="Enter start time" />
-										</div>
-										<div class="form-group">
-											<label>Number of guests: </label>
-											<input type="text" class="form-control" placeholder="Enter number of guests" />
-										</div>
-										<div class="form-group">
-											<label>Name: </label>
-											<input type="text" class="form-control" placeholder="Enter name" />
-										</div>
-										<div class="form-group">
-											<label>Phone number: </label>
-											<input type="text" class="form-control" placeholder="Enter phone number" />
-										</div>
-										<div class="form-group">
-											<label>Notes: </label>
-											<input type="text" class="form-control" placeholder="Enter additional information" />
-										</div>
-									</form>
-								</div>
-								<!-- Footer -->
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-primary">Save changes</button>
-								</div>
-							</div>
-						</div>
-					</div>
+          <!-- Current timeslot setting -->
+          <div>
+            <p>Restaurant's current seating arrangments:</p>
+            <ul class="text-small">
+              <li>{{ availableSeats }} seats available</li>
+              <li v-for="slots in timeSlots">{{slots.min}} - {{slots.max}} people: {{slots.duration}} hours seating</li>
+            </ul>
+          </div>
 
-					<!-- Adding reservation pop-up -->
-					<div class="modal fade" id="addReservation" tabindex="-1" role="dialog">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<!-- Header -->
-								<div class="modal-header">
-									<h5 class="modal-title">
-										Add a reservation
-									</h5>
-									<!-- Closing buttion -->
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<!-- Body -->
-								<div class="modal-body">
-									<form class="form">
-										<div class="form-group">
-											<label>Reservation start time: </label>
-											<input type="text" class="form-control" placeholder="Enter start time" />
-										</div>
-										<div class="form-group">
-											<label>Number of guests: </label>
-											<input type="text" class="form-control" placeholder="Enter number of guests" />
-										</div>
-										<div class="form-group">
-											<label>Name: </label>
-											<input type="text" class="form-control" placeholder="Enter name" />
-										</div>
-										<div class="form-group">
-											<label>Phone number: </label>
-											<input type="text" class="form-control" placeholder="Enter phone number" />
-										</div>
-										<div class="form-group">
-											<label>Notes: </label>
-											<input type="text" class="form-control" placeholder="Enter additional information" />
-										</div>
-									</form>
-								</div>
-								<!-- Footer -->
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-									<button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
-								</div>
-							</div>
-						</div>
-					</div>
+          <!-- Timetable -->
+          <br />
+          <table class="table" style="font-size: small;">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Time</th>
+                <th scope="col">Seats available</th>
+                <th scope="col">New Upcoming Reservation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- If there is a new reservation -->
+              <tr v-for="res in reservations">
+                <template v-if="res.newReservation">
+                  <td>{{ res.start }}</td>
+                  <td>{{ res.seatsAvailable }}</td>
+                  <td>
+                    <div class="row">
+                      <div class="col-sm-9">
+                        <p><b>First Name:</b> {{res.name}}</p>
+                        <p><b>Notes:</b> {{res.notes}}</p>
+                        <br/>
+                        <p><i class="material-icons text-small">people</i> {{res.people}} guests</p>
+                        <p><i class="material-icons text-small">access_time</i> {{res.duration}} hours</p>
+                        <p><i class="material-icons text-small">phone</i> {{res.phone}}</p>
+                        <br />
+                        
+                      </div>
+                      <div class="col-sm-2">
+                        <a href="#" data-toggle="modal" data-target="#editReservations"><i class="material-icons text-small">edit</i>Edit</a>
+                      </div>
+                    </div>
+                  </td>
+                </template>
+                <!-- If there isn't a new reservation -->
+                <template v-else>
+                  <td>{{ res.start }} - {{ res.end }}</td>
+                  <td>{{ res.seatsAvailable }}</td>
+                  <td>
+                    <div class="row">
+                      <div class="col-sm-9">
+                        N/A
+                      </div>
+                      <div class="col-sm-2">
+                        <a href="#" data-toggle="modal" data-target="#addReservation"><i class="material-icons text-small">add</i>Add</a>
+                      </div>
+                    </div>
+                  </td>
+                </template>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-					<!-- Adding reservation pop-up -->
-					<!-- To do: implement save changes -->
-					<div class="modal fade" id="editTimeArrangements" tabindex="-1" role="dialog">
-						<div class="modal-dialog" role="document">
-							<div class="modal-content">
-								<!-- Header -->
-								<div class="modal-header">
-									<h5 class="modal-title">
-										Edit time arrangement
-									</h5>
-									<!-- Closing buttion -->
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-								</div>
-								<!-- Body -->
-								<div class="modal-body">
-									<p>Restaurant's current seating arrangments:</p>
-									<ul class="text-small">
-										<li><input type="text" v-model="availableSeats" style="width:2em"/>seats available</li>
-										<li v-for="slots in timeSlots">
-											<input type="text" v-model="slots.min" style="width:2em" /> - <input type="text" v-model="slots.max" style="width:2em" /> people: <input type="text" v-model="slots.duration" style="width:2em" /> hours seating
-										</li>
-									</ul>
-								</div>
-								<!-- Footer -->
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		</div>
-		<div v-else class="container-fluid">
-			<h1>Forbidden</h1>
-			<p>You don't have access to this page.</p>
-		</div>
-	</div>
+        <!-- Second column -->
+        <div class="col-md-4 order-1 order-md-2">
+          <!-- Current reservations -->
+          <div class="box">
+            <div class="col-5 col-sm-5 col-md-12">
+              <p><i class="material-icons align-bottom">local_dining</i> {{ nReservations }} Reservations</p>
+            </div>
+            <div class="col-5 col-sm-5 col-md-12">
+              <p><i class="material-icons align-bottom">people</i> {{ nGuests }} Guests</p>
+            </div>
+          </div>
 
-	
+          <br />
+          <div class="box">
+            <div class="col-5 col-sm-5 col-md-12">
+              <!-- Stop online reservation -->
+              <button v-if="stopOnline" type="button" class="btn btn-warning btn-sm vertical-button" data-toggle="modal" data-target="#areYouSure">
+                <i class="fas fa-unlock fa-lg"></i> Start online
+              </button>
+              <button v-else type="button" class="btn btn-danger btn-sm vertical-button" data-toggle="modal" data-target="#areYouSure">
+                <i class="fas fa-lock fa-lg"></i> Stop online
+              </button>
+            </div>
+            <div class="col-5 col-sm-5 col-md-12">
+              <!-- Add reservation -->
+              <button type="button" class="btn btn-primary btn-sm vertical-button" data-toggle="modal" data-target="#addReservation">
+                <i class="material-icons align-bottom">add_circle_outline</i> Add reservation
+              </button>
+            </div>
+            <div class="col-5 col-sm-5 col-md-12">
+              <!-- Edit timeslots -->
+              <button type="button" class="btn btn-primary btn-sm vertical-button" data-toggle="modal" data-target="#editTimeArrangements">
+                <i class="material-icons align-bottom">edit</i> Edit timeslots
+              </button>
+            </div>
+          </div>
 
-	<br />
-	<!-- bottom banner -->
-	<div class="container-fluid text-center" id="footer">
-		<p> Privacy Policy - Terms of Use - Copyright 2019 </p>
-	</div>
+          <!-- Are-you-sure pop-up -->
+          <div class="modal fade" id="areYouSure" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                  <h5 class="modal-title">
+                    Are you sure?
+                  </h5>
+                  <!-- Closing buttion -->
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- Body -->
+                <div class="modal-body">
+                  <p v-if="stopOnline">Are you sure you want to start online reservations for today?</p>
+                  <p v-else>Are you sure you want to stop online reservations?</p>
+                </div>
+                <!-- Footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click="stopOnline=!stopOnline">Yes</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-	<script src='javascripts/rome.min.js'></script> <!-- date and time picker -->
-	<script src="javascripts/bootstrap.min.js"></script>
-	<script src="javascripts/search.js"></script>
-	<script src="javascripts/manageRestaurant.js"></script>
-	<script src="javascripts/navigationBar.js"></script>
+          <!-- Edit Reservation pop-up -->
+          <div class="modal fade" id="editReservations" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                  <h5 class="modal-title">
+                    Edit Reservations
+                  </h5>
+                  <!-- Closing buttion -->
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- Body -->
+                <div class="modal-body">
+                  <form class="form">
+                    <div class="form-group">
+                      <label>Reservation start time: </label>
+                      <input type="text" class="form-control" placeholder="Enter start time" />
+                    </div>
+                    <div class="form-group">
+                      <label>Number of guests: </label>
+                      <input type="text" class="form-control" placeholder="Enter number of guests" />
+                    </div>
+                    <div class="form-group">
+                      <label>Name: </label>
+                      <input type="text" class="form-control" placeholder="Enter name" />
+                    </div>
+                    <div class="form-group">
+                      <label>Phone number: </label>
+                      <input type="text" class="form-control" placeholder="Enter phone number" />
+                    </div>
+                    <div class="form-group">
+                      <label>Notes: </label>
+                      <input type="text" class="form-control" placeholder="Enter additional information" />
+                    </div>
+                  </form>
+                </div>
+                <!-- Footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Adding reservation pop-up -->
+          <div class="modal fade" id="addReservation" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                  <h5 class="modal-title">
+                    Add a reservation
+                  </h5>
+                  <!-- Closing buttion -->
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- Body -->
+                <div class="modal-body">
+                  <form class="form">
+                    <div class="form-group">
+                      <label>Reservation start time: </label>
+                      <input type="text" class="form-control" placeholder="Enter start time" />
+                    </div>
+                    <div class="form-group">
+                      <label>Number of guests: </label>
+                      <input type="text" class="form-control" placeholder="Enter number of guests" />
+                    </div>
+                    <div class="form-group">
+                      <label>Name: </label>
+                      <input type="text" class="form-control" placeholder="Enter name" />
+                    </div>
+                    <div class="form-group">
+                      <label>Phone number: </label>
+                      <input type="text" class="form-control" placeholder="Enter phone number" />
+                    </div>
+                    <div class="form-group">
+                      <label>Notes: </label>
+                      <input type="text" class="form-control" placeholder="Enter additional information" />
+                    </div>
+                  </form>
+                </div>
+                <!-- Footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Adding reservation pop-up -->
+          <!-- To do: implement save changes -->
+          <div class="modal fade" id="editTimeArrangements" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                  <h5 class="modal-title">
+                    Edit time arrangement
+                  </h5>
+                  <!-- Closing buttion -->
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <!-- Body -->
+                <div class="modal-body">
+                  <p>Restaurant's current seating arrangments:</p>
+                  <ul class="text-small">
+                    <li><input type="text" v-model="availableSeats" style="width:2em"/>seats available</li>
+                    <li v-for="slots in timeSlots">
+                      <input type="text" v-model="slots.min" style="width:2em" /> - <input type="text" v-model="slots.max" style="width:2em" /> people: <input type="text" v-model="slots.duration" style="width:2em" /> hours seating
+                    </li>
+                  </ul>
+                </div>
+                <!-- Footer -->
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div v-else class="container-fluid">
+      <h1>Forbidden</h1>
+      <p>You don't have access to this page.</p>
+    </div>
+  </div>
+
+  
+
+  <br />
+  <!-- bottom banner -->
+  <div class="container-fluid text-center" id="footer">
+    <p> Privacy Policy - Terms of Use - Copyright 2019 </p>
+  </div>
+
+  <script src='javascripts/rome.min.js'></script> <!-- date and time picker -->
+  <script src="javascripts/bootstrap.min.js"></script>
+  <script src="javascripts/search.js"></script>
+  <script src="javascripts/manageRestaurant.js"></script>
+  <script src="javascripts/navigationBar.js"></script>
 </body>
 </html>
