@@ -1,4 +1,31 @@
 // Log In Functions //////////////////////////////////////////////////////////////
+
+function isLoggedIn() {
+  // Create new AJAX request
+  var xhttp = new XMLHttpRequest();
+
+  // Handle response
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
+      document.getElementById("signUp").style.display = "none";
+      document.getElementById("signIn").style.display = "none";
+      $('#signInModal').modal('hide');
+      document.getElementById("account").style.display = "block";
+      document.getElementById("email-setting").innerHTML = "<b>Email: </b>"+document.getElementById('email-signIn').value;
+      document.getElementById("manage-restaurant-option").style.display = "none";
+      if (this.status == 201) {
+        document.getElementById("manage-restaurant-option").style.display = "block";
+      }
+    }
+  };
+
+  // Open connection
+  xhttp.open("GET", "users/isLoggedIn", true);
+
+  xhttp.send();
+}
+isLoggedIn();
+
 function login() {
   // Create new AJAX request
   var xhttp = new XMLHttpRequest();
@@ -7,10 +34,10 @@ function login() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       alert("Success");
-	    document.getElementById("signUp").style.display = "none";
-	    document.getElementById("signIn").style.display = "none";
-	    $('#signInModal').modal('hide');
-	    document.getElementById("account").style.display = "block";
+      document.getElementById("signUp").style.display = "none";
+      document.getElementById("signIn").style.display = "none";
+      $('#signInModal').modal('hide');
+      document.getElementById("account").style.display = "block";
       document.getElementById("email-setting").innerHTML = "<b>Email: </b>"+document.getElementById('email-signIn').value;
       if (xhttp.responseText === "manager") {
         document.getElementById("manage-restaurant-option").style.display = "block";

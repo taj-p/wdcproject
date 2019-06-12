@@ -109,17 +109,84 @@ function submitReview() {
   xhttp.send(JSON.stringify(post_body));
 }
 
-var isLoggedIn = false;
-function confirmReservation() {
-  if (isLoggedIn) {
-    document.getElementById("removeIfLoggedIn").style.display = 'none';
-  }
-  else {
-    reserveWithoutAccount();
-  }
+function confirmBookingDetails() {
+  // Create new AJAX request
+  var xhttp = new XMLHttpRequest();
+
+  // Handle response
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4) {
+      var date = document.getElementById("datePicker").value;
+      document.getElementById("dateCB").innerHTML = " " + date;
+
+      var time = document.getElementById("timePicker").value;
+      document.getElementById("timeCB").innerHTML = " " + time;
+
+      var people = document.getElementById("peopleSelector").value;
+      document.getElementById("guestsCB").innerHTML = " " + people + " people";
+
+      if (this.status == 200 || this.status == 201) {
+        document.getElementById("removeIfLoggedIn").style.display = 'none';
+        document.getElementById("confirmEmail").style.display = 'none';
+      }
+      else {
+        document.getElementById("removeIfLoggedIn").style.display = '';
+        document.getElementById("confirmEmail").style.display = '';
+      }
+    }
+  };
+
+  // Open connection
+  xhttp.open("GET", "users/isLoggedIn", true);
+
+  xhttp.send();
 }
 
-// sends the reservation details to the server and returns a booking ID.
+// confirms the reservation
+function confirmReservation() {
+  reserveWithoutAccount();
+}
+
+// sends the reservation details to the server and returns a booking ID for a logged in user.
+function reserveWithAccount() {
+  var url = new URL(window.location.href);
+  const restaurantid = url.searchParams.get("restaurantid");
+  const date = document.getElementById("datePicker").value;
+  const time = document.getElementById("timePicker").value;
+  const people = document.getElementById("peopleSelector").value;
+  const phone = document.getElementById("phonenumber").value;
+  const email = document.getElementById("email").value;
+  const firstName = document.getElementById("firstname").value;
+  const lastName = document.getElementById("lastname").value;
+  const additionalInformation = document.getElementById("additionalInformation").value;
+
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 & this.status == 200) {
+      console.log(this.responseText);
+      document.getElementById("bookingid").innerHTML = this.responseText;
+      document.getElementById("insertEmail").innerHTML = email;
+    }
+  };
+
+  var bookingInfo = URI('users/addBooking');
+  var query = bookingInfo.query(true);
+  query.restaurant_id = restaurantid;
+  query.date = date;
+  query.time = time;
+  query.name_first = firstName;
+  query.name_last = lastName;
+  query.phone_number = phone;
+  query.numguests = people;
+  query.additionalInformation = additionalInformation;
+  bookingInfo.query(query);
+
+  xhttp.open("GET", bookingInfo, true);
+  xhttp.send();
+}
+
+// sends the reservation details to the server and returns a booking ID for a non-logged in user.
 function reserveWithoutAccount() {
   var url = new URL(window.location.href);
   const restaurantid = url.searchParams.get("restaurantid");
@@ -343,16 +410,5 @@ function showSlides(n) {
   }
   slides[slideIndex-1].style.display = "block";
   dots[slideIndex-1].className += " active";
-}
-
-function confirmBookingDetails() {
-  var date = document.getElementById("datePicker").value;
-  document.getElementById("dateCB").innerHTML = " " + date;
-
-  var time = document.getElementById("timePicker").value;
-  document.getElementById("timeCB").innerHTML = " " + time;
-
-  var people = document.getElementById("peopleSelector").value;
-  document.getElementById("guestsCB").innerHTML = " " + people + " people";
 }
 

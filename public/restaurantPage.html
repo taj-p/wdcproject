@@ -57,7 +57,7 @@
         </a>
         <div class="dropdown-menu">
           <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bookingHistory">Booking History</a>
-          <a class="dropdown-item" href="manager.html">Manage Restaurant</a>
+          <a id="manage-restaurant-option" class="dropdown-item" href="manager.html">Manage Restaurant</a>
           <a class="dropdown-item" data-toggle="modal" href="#settingsModal">Settings</a>
           <a class="dropdown-item" href="#" onclick="logout()">Log out</a>
         </div>
@@ -252,11 +252,11 @@
           <input class = "confirmBookingInput" type="text" id="lastname"><br>
           <p>Email address:</p>
           <input class = "confirmBookingInput" type="text" id="email"><br>
+          </div>        
           <p>Phone number:</p>
           <input class ="confirmBookingInput" type="text" id="phonenumber">
           <p>Additional Information:</p>
           <input class ="confirmBookingInput" type="text" id="additionalInformation">
-	  </div>        
         </div>
         <!-- Footer -->
         <div class="modal-footer">
@@ -279,7 +279,8 @@
         </div>
         <!-- Body -->
         <div class="modal-body">
-          <p id="confirmedBookingMessage">We've reserved your table for you.<br><br>Your booking id is: <span id="bookingid"></span><br><br>A confirmation email has been sent to <i><span id="insertEmail"></span></i><br><br>To manage your current bookings, click <a id="goManageBookings" href="#" data-toggle="modal" data-target="#bookingModal">here</a><br><br>To add this booking to your Google Calendar, click <a href="#" onclick="addToCalendar();">here</a></p>
+          <p id="confirmedBookingMessage">We've reserved your table for you.<br><br>Your booking id is: <span id="bookingid"></span><br><br>
+          <div id="confirmEmail">A confirmation email has been sent to <i><span id="insertEmail"></span></i></div><br>To manage your current bookings, click <a id="goManageBookings" href="#" data-toggle="modal" data-target="#bookingModal">here</a><br><br>To add this booking to your Google Calendar, click <a href="#" onclick="addToCalendar();">here</a></p>
         </div>
       </div>
     </div>
