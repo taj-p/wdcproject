@@ -78,7 +78,7 @@
 					<ul class="navbar-nav">
            				 <li><a id="restaurantInfoSelected" class="nav item nav-link" v-bind:class="[{ active: restaurantInfo }]" v-on:click="restaurantInfo=true; manageReservation=false;" href="#">Restaurant Information</a></li>
 						<li><a id="manageReservationSelected" class="nav item nav-link" v-bind:class="[{ active: manageReservation }]" v-on:click="restaurantInfo=false; manageReservation=true;" href="#" >Manage Reservations</a></li>
-						<li><a class="nav item nav-link" href="/restaurantPage.html?restaurantid=1">Preview</a></li>
+						<li><a class="nav item nav-link" v-bind:href="'/restaurantPage.html?restaurantid='+id">Preview</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -454,7 +454,6 @@
 								<!-- Footer -->
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary" data-dismiss="modal">Done</button>
-									<!-- <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button> -->
 								</div>
 							</div>
 						</div>

@@ -148,6 +148,7 @@ function fillRestaurantInfo() {
         }
       }
       restaurantInfo.originalReviewCounts = results[0].review_count;
+      restaurantInfo.id = results[0].restaurant_id;
     }
   };
 
@@ -199,6 +200,7 @@ var restaurantInfo = new Vue({
   el: '#restaurantInfo',
   data: {
     validUser: false,
+    id: '',
     name: '',
     address: '',
     suburb: '',
