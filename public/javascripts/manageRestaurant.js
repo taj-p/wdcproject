@@ -184,8 +184,8 @@ function updateRestaurantInfo() {
     // Send request
     xhttp.send(JSON.stringify({
       name: restaurantInfo.name,
-      address: JSON.stringify({street: restaurantInfo.address, suburb: restaurantInfo.suburb,
-          state: restaurantInfo.state, postal_code: restaurantInfo.postal_code}),
+      address: JSON.stringify({Street: restaurantInfo.address, Suburb: restaurantInfo.suburb,
+          State: restaurantInfo.state, Postal_code: restaurantInfo.postal_code}),
       phone: restaurantInfo.phone,
       capacity: restaurantInfo.availableSeats,
       description: restaurantInfo.description,

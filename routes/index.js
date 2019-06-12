@@ -360,8 +360,8 @@ router.get('/restaurant.json', function(req, res, next) {
 
         // Query from search bar, query can appear in name, address, description
         else if (param === "search") {
-          current_query += "(name LIKE ? OR JSON_EXTRACT(address, \"$.street\") LIKE ? " +
-          "OR JSON_EXTRACT(address, \"$.suburb\") LIKE ? OR description LIKE ?) ";
+          current_query += "(name LIKE ? OR JSON_EXTRACT(address, \"$.Street\") LIKE ? " +
+          "OR JSON_EXTRACT(address, \"$.Suburb\") LIKE ? OR description LIKE ?) ";
           inserts.push("%"+req.query[param]+"%");
           inserts.push("%"+req.query[param]+"%");
           inserts.push("%"+req.query[param]+"%");
@@ -704,9 +704,7 @@ router.get('/restaurantResults.txt', function(req, res) {
                  FROM restaurant, rest_img_url
                  WHERE restaurant.restaurant_id = rest_img_url.restaurant_id
                  AND rest_img_url.is_menu = 0;`;
-                 // ***********************************
-                 // **** UNCOMMENT FOR PRODUCTION *****
-                 // ***********************************
+                 // UNCOMMENT BELOW FOR SEARCH FUNCTIONALITY /////////////////////
                  //AND (name LIKE ? OR JSON_EXTRACT(address, \"$.street\") LIKE ?
                  //OR JSON_EXTRACT(address, \"$.suburb\") LIKE ? OR description LIKE ?)
                  //LIMIT 50;`
