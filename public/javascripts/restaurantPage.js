@@ -72,7 +72,7 @@ function submitReview() {
   var reviewDiv = document.getElementById("insertReview");
   const description = reviewDiv.getElementsByTagName("TEXTAREA")[0].value;
   const noiseRating = document.getElementById("noise_rating").value;
-  console.log(description);
+  // console.log(description);
 
   const ratings = reviewDiv.getElementsByTagName("INPUT");
 
@@ -90,7 +90,7 @@ function submitReview() {
                       rating_value:    ratings[4].value,
                       name_display:    ratings[5].value,
                     };
-  console.log(post_body);
+  // console.log(post_body);
 
   var xhttp = new XMLHttpRequest();
 
@@ -164,7 +164,7 @@ function reserveWithAccount() {
 
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 & this.status == 200) {
-      console.log(this.responseText);
+      // console.log(this.responseText);
       document.getElementById("bookingid").innerHTML = this.responseText;
       document.getElementById("insertEmail").innerHTML = email;
     }
@@ -203,7 +203,7 @@ function reserveWithoutAccount() {
 
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 & this.status == 200) {
-      console.log(this.responseText);
+      // console.log(this.responseText);
       document.getElementById("bookingid").innerHTML = this.responseText;
       document.getElementById("insertEmail").innerHTML = email;
     }
@@ -315,7 +315,7 @@ function populateImages() {
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 & this.status == 200) {
       RESTAURANTDATA.images = JSON.parse(this.responseText);
-      console.log(RESTAURANTDATA);
+      // console.log(RESTAURANTDATA);
       populateDomElements(RESTAURANTDATA);
     }
   };
