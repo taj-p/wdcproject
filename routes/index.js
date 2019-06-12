@@ -6,7 +6,7 @@ var moment = require('moment');
 // cuisines that are available in the database
 const cuisines = [
   "Italian",  "Mexican", "Japanese", "Steakhouse", "Indian",  "Vietnamese", "Australian",
-  "Filipino", "Chinese", "Dessert", "Malaysian", "Polish", "Pakistani", "Korean", "Dessert"
+  "Filipino", "Chinese", "Dessert", "Malaysian", "Polish", "Pakistani", "Korean"
 ];
 const costs = [ "$", "$$", "$$$" ];
 const diet_options = [ "Vegetarian", "Vegan", "Halal", "Gluten-free" ];

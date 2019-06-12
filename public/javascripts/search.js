@@ -59,18 +59,20 @@ function filterRestaurants() {
 
   var cuisineResults = [];
   const CUISINEFILTERS = document.getElementById("cuisineFilter").getElementsByTagName("INPUT");
+  console.log(CUISINEFILTERS);
   for (i = 0; i < CUISINEFILTERS.length; i++) {
     if (CUISINEFILTERS[i].checked == true) cuisineResults = cuisineResults.concat(
-      RestaurantClientResults.filter(object => object.cuisine === CUISINEFILTERS[i].name.slice(0, CUISINEFILTERS[i].name.length - 1)));
+      RestaurantClientResults.filter(object => object.cuisine === CUISINEFILTERS[i].name.slice(0, CUISINEFILTERS[i].name.length - 1) && isUnique(object.restaurant_id, cuisineResults)));
   }
-  RestaurantClientResults = [...cuisineResults];
+  RestaurantClientResults = cuisineResults;
+  console.log(RestaurantClientResults);
 
   var dietResults = [];
   const DIETFILTERS = document.getElementById("dietFilter").getElementsByTagName("INPUT");
   for (i = 0; i < DIETFILTERS.length; i++) {
     if (DIETFILTERS[i].checked == true) dietResults = dietResults.concat(RestaurantClientResults.filter(object => object.diet_options.indexOf(DIETFILTERS[i].name) > -1 && isUnique(object.restaurant_id, dietResults)));
   }
-  RestaurantClientResults = [...dietResults];
+  RestaurantClientResults = dietResults;
 }
 
 // sorts the restaurants according to the specified sort option
