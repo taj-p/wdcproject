@@ -54,6 +54,26 @@ $(document).on("click", "#manageReservationSelected", function () {
 // 		reservations:[]}
 // ];
 
+function checkValidUser() {
+	// Create new AJAX request
+	var xhttp = new XMLHttpRequest();
+
+	// Handle response
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			restaurantInfo.validUser = true;
+		} else if (this.readyState == 4 && this.status == 403) {
+			restaurantInfo.validUser = false;
+		}
+	};
+
+	// Open connection
+	xhttp.open("GET", "/users/manager.json", true);
+
+	// Send request
+	xhttp.send();
+};
+
 function getCuisines() {
 	// Create new AJAX request
 	var xhttp = new XMLHttpRequest();
@@ -61,7 +81,7 @@ function getCuisines() {
 	// Handle response
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			restaurantInfo.cuisines = JSON.parse(this.responseText);
+			restaurantInfo.cuisineList = JSON.parse(this.responseText);
 		}
 	};
 
@@ -71,6 +91,25 @@ function getCuisines() {
 	// Send request
 	xhttp.send();
 };
+
+function getDietOptions() {
+	// Create new AJAX request
+	var xhttp = new XMLHttpRequest();
+
+	// Handle response
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			restaurantInfo.dietList = JSON.parse(this.responseText);
+		}
+	};
+
+	// Open connection
+	xhttp.open("GET", "/diet_options.txt", true);
+
+	// Send request
+	xhttp.send();
+};
+
 
 function fillRestaurantInfo() {
 	// Create new AJAX request
@@ -83,29 +122,96 @@ function fillRestaurantInfo() {
 			restaurantInfo.name = results[0].name;
 			// Address
 			var add = JSON.parse(results[0].address);
-			restaurantInfo.address = add.Street + ", " + add.Suburb + ", " + add.State + ", " +
-				 add.Postal_code;
+			restaurantInfo.address = add.street;
+			restaurantInfo.suburb = add.suburb;
+			restaurantInfo.state = add.state;
+			restaurantInfo.postal_code = add.postal_code;
 			restaurantInfo.description = results[0].description;
 			restaurantInfo.cost = results[0].cost;
-			// todo: pre-fill cuisines
+			restaurantInfo.initialCost = restaurantInfo.cost;
+			var cuisines = JSON.parse(results[0].cuisine);
+			for (var k in cuisines) {
+				if (cuisines[k] == true) {
+					restaurantInfo.selectedCuisine.push(k);
+				}
+			}
+			restaurantInfo.selectedCuisine = restaurantInfo.selectedCuisine[0];
+			restaurantInfo.phone = results[0].phone;
+			restaurantInfo.availableSeats = results[0].capacity;
+			var diets = JSON.parse(results[0].diet_options);
+			restaurantInfo.originalDiets = diets;
+			for (var k in diets) {
+				if (diets[k] == true) {
+					restaurantInfo.selectedDiets.push(k);
+				}
+			}
+			restaurantInfo.originalReviewCounts = results[0].review_count;
 		}
 	};
 
 	// Open connection
-	xhttp.open("GET", "/users/getRestInfo", true);
+	xhttp.open("GET", "/users/restInfo.json", true);
 
 	// Send request
 	xhttp.send();
 };
 
+
+function updateRestaurantInfo() {
+	// Create new AJAX request
+	var xhttp = new XMLHttpRequest();
+
+	// Handle response
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			console.log("Update successful");
+		}
+	};
+
+	// Open connection
+	xhttp.open("POST", "/users/updateRestInfo", true);
+
+	// Set content type to JSON
+  	xhttp.setRequestHeader("Content-type", "application/json");
+
+
+  	var jsonCuisine = {};
+  	jsonCuisine[restaurantInfo.selectedCuisine] = true;
+
+  	// Send request
+  	xhttp.send(JSON.stringify({ 
+  		name: restaurantInfo.name,
+  		address: JSON.stringify({street: restaurantInfo.address, suburb: restaurantInfo.suburb,
+  				state: restaurantInfo.state, postal_code: restaurantInfo.postal_code}),
+  		phone: restaurantInfo.phone,
+  		capacity: restaurantInfo.availableSeats,
+  		description: restaurantInfo.description,
+  		cost: restaurantInfo.cost,
+  		diet_options: JSON.stringify(restaurantInfo.originalDiets),
+  		cuisine: JSON.stringify(jsonCuisine),
+  		review_counts: restaurantInfo.originalReviewCounts
+  	}));
+};
+
 var restaurantInfo = new Vue({
 	el: '#restaurantInfo',
 	data: {
+		validUser: false,
 		name: '',
 		address: '',
+		suburb: '',
+		state: '',
+		postal_code: '',
 		description: '',
-		cuisines: [],
+		cuisineList: [],
+		selectedCuisine: [],
+		dietList: [],
+		originalDiets: '',
+		selectedDiets: [],
+		initialCost: '',
 		cost: '',
+		phone: '',
+		originalReviewCounts: '',
 		openings: [
 			{day: "Monday", 	count:1},
 			{day: "Tuesday", 	count:1},
@@ -119,7 +225,7 @@ var restaurantInfo = new Vue({
 		manageReservation: false,
 		nReservations: 5,
 		nGuests: 20,
-		availableSeats: 20,
+		availableSeats: '',
 		timeSlots: [
 			{min: "0", 	max: "3", 		duration: 2},
 			{min: "4", 	max: "7", 		duration: 2.5},
@@ -139,7 +245,19 @@ var restaurantInfo = new Vue({
 		stopOnline: false
 	},
 	mounted: function() {
+		checkValidUser();
+		getDietOptions();
 		getCuisines();
 		fillRestaurantInfo();
+	},
+	methods: {
+		selectDietContains: function(d) {
+			for (var i = 0; i < this.dietList.length; i++) {
+				if (d == this.selectedDiets[i]) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 });

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Restaurant Manager</title>
+	<title>Odyssey Eats Restaurant Manager</title>
 	<meta charset="utf-8">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -36,6 +36,7 @@
 	<script src="javascripts/bootstrap.min.js" defer></script>
 	<script src="javascripts/search.js" defer></script>
 	<script src="javascripts/manager.js" defer></script>
+	<script src="javascripts/navigationBar.js" defer></script>
 
 </head>
 <body onload="fillManagerPage()">
@@ -43,15 +44,15 @@
 		<!-- top navbar -->
 		<nav class="navbar navbar-expand-sm navbar-dark">
 			<div class="container"> <!-- to keep nav items from hugging borders in large viewports -->
-				<a class="navbar-brand" href="/">LOGO</a>
+				<a class="navbar-brand" href="/">Odyssey Eats</a>
 				<div class="dropdown"> <!-- to ensure sign up and sign in links are left aligned -->
-					<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+					<button v-if="validUser" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
 						Manage account
 					</button>
 					<div class="dropdown-menu">
-						<a class="dropdown-item" href="/">Log out</a>
+						<a class="dropdown-item" href="/" onclick="logout()">Log out</a>
 					</div>
-					<span class="caret"></span></button>
+					<span class="caret"></span>
 				</div>
 			</div>
 		</nav>
@@ -67,7 +68,9 @@
 		<br />
 		<div v-if="validUser" class="container-fluid">
 			<h3>The restaurants you manage:</h3>
-			<li v-for="r in restaurants"><a href="manageRestaurant.html" v-on:click="selectRestaurant(r)">{{r.name}}</a></li>
+			<ul>
+				<li v-for="r in restaurants"><a href="manageRestaurant.html" v-on:click="selectRestaurant(r)">{{r.name}}</a></li>
+			</ul>
 		</div>
 		<div v-else class="container-fluid">
 			<h1>Forbidden</h1>
